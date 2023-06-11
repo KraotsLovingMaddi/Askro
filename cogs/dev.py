@@ -234,6 +234,17 @@ class Developer(commands.Cog):
 
         await ctx.reply(f'Invite for `{bot}`: https://discord.com/oauth2/authorize?client_id={bot_id}&scope=bot&permissions=543246773503')
 
+    @commands.command(name='say')
+    async def say_something(self, ctx: Context, *, sentence: str):
+        """Make the bot say something.
+        
+        `sentence` **->** The sentence you want the bot to say.
+        """
+
+        await ctx.message.delete()
+
+        await ctx.send(sentence)
+
 
 def setup(bot: Askro):
     bot.add_cog(Developer(bot))

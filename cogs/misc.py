@@ -15,17 +15,6 @@ class Misc(commands.Cog):
     def display_emoji(self) -> str:
         return '🔧'
 
-    @commands.command(name='say')
-    @commands.is_owner()
-    async def say_something(self, ctx: Context, *, sentence: str):
-        """Make the bot say something.
-        
-        `sentence` **->** The sentence you want the bot to say.
-        """
-
-        await ctx.message.delete()
-
-        await ctx.send(sentence)
 
 def setup(bot: Askro):
     bot.add_cog(Misc(bot))
