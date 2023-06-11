@@ -10,7 +10,7 @@ import disnake
 from disnake.ext import commands
 
 import utils
-from utils import Context, TextPage, clean_code#, Constants
+from utils import Context, TextPage, clean_code, Misc
 
 from main import Askro
 
@@ -116,31 +116,31 @@ class Developer(commands.Cog):
     #     os.system('nohup python3 main.py &>> activity.log &')
     #     os.system(f'kill -9 {pid}')
 
-    # @commands.command(name='toggle')
-    # async def toggle_cmd(self, ctx: Context, *, command: str):
-    #     """Toggle a command on and off.
+    @commands.command(name='toggle')
+    async def toggle_cmd(self, ctx: Context, *, command: str):
+        """Toggle a command on and off.
 
-    #     `command` **->** The command to disable.
-    #     """
+        `command` **->** The command to disable.
+        """
 
-    #     cmd = self.bot.get_command(command)
-    #     if cmd is None:
-    #         return await ctx.reply('Command not found.')
-    #     elif cmd.qualified_name == 'toggle':
-    #         return await ctx.reply('This command cannot be disabled.')
+        cmd = self.bot.get_command(command)
+        if cmd is None:
+            return await ctx.reply('Command not found.')
+        elif cmd.qualified_name == 'toggle':
+            return await ctx.reply('This command cannot be disabled.')
 
-    #     data: Constants = await self.bot.db.get('constants')
-    #     if cmd.qualified_name in data.disabled_commands:
-    #         data.disabled_commands.remove(cmd.qualified_name)
-    #         await data.commit()
-    #     else:
-    #         data.disabled_commands.append(cmd.qualified_name)
-    #         await data.commit()
-    #     cmd.enabled = not cmd.enabled
+        data: Misc = await self.bot.db.get('misc')
+        if cmd.qualified_name in data.disabled_commands:
+            data.disabled_commands.remove(cmd.qualified_name)
+            await data.commit()
+        else:
+            data.disabled_commands.append(cmd.qualified_name)
+            await data.commit()
+        cmd.enabled = not cmd.enabled
 
-    #     await ctx.reply(
-    #         f'Successfully **{"enabled" if cmd.enabled is True else "disabled"}** the command `{cmd.qualified_name}`'
-    #     )
+        await ctx.reply(
+            f'Successfully **{"enabled" if cmd.enabled is True else "disabled"}** the command `{cmd.qualified_name}`'
+        )
 
     @commands.command(name='history', aliases=('dmhistory',))
     async def dm_history(self, ctx: Context, member: disnake.Member, limit: int = 100):
@@ -197,26 +197,26 @@ class Developer(commands.Cog):
 
         await ctx.reply(embed=em)
 
-    # @commands.command(aliases=('accountage',))
-    # async def accage(self, ctx: Context, days: int = None):
-    #     """Set the minimum account age one must be in order to be allowed in the server.
+    @commands.command(aliases=('accountage',))
+    async def accage(self, ctx: Context, days: int = None):
+        """Set the minimum account age one must be in order to be allowed in the server.
 
-    #     `days` **->** The minimum amount of days the user's account's age must be. If not given it will show the current minimum amount of days set.
-    #     """
+        `days` **->** The minimum amount of days the user's account's age must be. If not given it will show the current minimum amount of days set.
+        """
 
-    #     entry: Constants = await self.bot.db.get('constants')
-    #     if days is None:
-    #         return await ctx.reply(
-    #             f'The current minimum acount age is set to `{entry.min_account_age}` days.'
-    #         )
+        entry: Misc = await self.bot.db.get('misc')
+        if days is None:
+            return await ctx.reply(
+                f'The current minimum acount age is set to `{entry.min_account_age}` days.'
+            )
 
-    #     entry.min_account_age = days
-    #     await entry.commit()
+        entry.min_account_age = days
+        await entry.commit()
 
-    #     await ctx.reply(
-    #         'Successfully made the minimum account age '
-    #         f'that someone must be in order to join the server `{days}` days.'
-    #     )
+        await ctx.reply(
+            'Successfully made the minimum account age '
+            f'that someone must be in order to join the server `{days}` days.'
+        )
 
     @commands.command(name='bot-invite', aliases=('botinv', 'botinvite', 'binv', 'binvite'))
     async def _bot_invite(self, ctx: Context, bot_id: int = None):
@@ -233,17 +233,6 @@ class Developer(commands.Cog):
             return await ctx.reply('Could not find a bot with that id.')
 
         await ctx.reply(f'Invite for `{bot}`: https://discord.com/oauth2/authorize?client_id={bot_id}&scope=bot&permissions=543246773503')
-
-    @commands.Cog.listener('on_button_click')
-    async def check_for_trash_delete(self, inter: disnake.MessageInteraction):
-        if inter.component.custom_id == 'trash-button-delete':
-            try:
-                await inter.response.defer()
-            except disnake.HTTPException:
-                pass
-            if inter.author.id == self.bot._owner_id or \
-                    any(r.id in utils.StaffRoles.all for r in inter.author.roles):
-                await utils.try_delete(inter.message)
 
 
 def setup(bot: Askro):

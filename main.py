@@ -35,6 +35,8 @@ class Askro(commands.Bot):
         self._owner_id = 1116768380402270239
         self._owner_ids = [1116768380402270239, 1116770319802322954]
 
+        self.db: utils.databases.Database = utils.databases.Database()
+
         self.socket_events = Counter()
         self.execs = {}
 
@@ -54,6 +56,17 @@ class Askro(commands.Bot):
     async def on_ready(self):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
+
+        data: utils.Misc = await utils.Misc.get()
+        if data is None:
+            data = await utils.Misc().commit()
+        for cmd_name in data.disabled_commands:
+            cmd = self.get_command(cmd_name)
+            if cmd is None:
+                data.disabled_commands.remove(cmd_name)
+                await data.commit()
+            else:
+                cmd.enabled = False
 
     @property
     def _owner(self) -> disnake.User:
