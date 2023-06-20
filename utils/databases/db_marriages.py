@@ -13,5 +13,7 @@ class Marriage(Document, GetDoc):
     married_to = IntField()
     married_since = DateTimeField()
 
+    adoptions = ListField(IntField())
+
     class Meta:
         collection_name = 'Marriages'
