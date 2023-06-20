@@ -38,7 +38,7 @@ class Developer(commands.Cog):
         **Local Variables**
         \u2800 • ``disnake`` **->** The disnake module.
         \u2800 • ``commands`` **->** The disnake.ext.commands module.
-        \u2800 • ``_bot`` **->** The bot instance. (`Vystalia`)
+        \u2800 • ``_bot`` **->** The bot instance. (`Askro`)
         \u2800 • ``_ctx`` **->** The ``Context`` object of the command.
         \u2800 • ``_channel`` **->** The ``disnake.abc.GuildChannel`` the command is invoked in.
         \u2800 • ``_author`` **->** The ``disnake.Member`` of the command.
@@ -222,7 +222,7 @@ class Developer(commands.Cog):
     async def _bot_invite(self, ctx: Context, bot_id: int = None):
         """Sends the link to add the bot to a server (with all permissions enabled).
 
-        `bot_id` **->** The id of the bot you want the invite for, defaults to vystalia.
+        `bot_id` **->** The id of the bot you want the invite for, defaults to askro.
         """
 
         if bot_id is None:

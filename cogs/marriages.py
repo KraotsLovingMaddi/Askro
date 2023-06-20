@@ -33,7 +33,7 @@ class Marriages(commands.Cog):
 
         data1: Marriage = await self.bot.db.get('marriage', ctx.author.id)
         if data1 and data1.married_to != 0:
-            mem = ctx.vystalia.get_member(data1.married_to)
+            mem = ctx.askro.get_member(data1.married_to)
             return await ctx.reply(f'{ctx.denial} You are already married to {mem.mention}')
         elif data1 and member.id in data1.adoptions:
             return await ctx.reply(
@@ -42,7 +42,7 @@ class Marriages(commands.Cog):
 
         data2: Marriage = await self.bot.db.get('marriage', member.id)
         if data2 and data2.married_to != 0:
-            mem = ctx.vystalia.get_member(data2.married_to)
+            mem = ctx.askro.get_member(data2.married_to)
             return await ctx.reply(f'{ctx.denial} `{utils.format_name(member)}` is already married to {mem.mention}')
         elif data2 and ctx.author.id in data2.adoptions:
             return await ctx.reply(
@@ -107,7 +107,7 @@ class Marriages(commands.Cog):
             return await ctx.reply(f'{ctx.denial} You are not married to anyone.')
 
         else:
-            usr = ctx.vystalia.get_member(data.married_to)
+            usr = ctx.askro.get_member(data.married_to)
 
             view = utils.ConfirmView(ctx, f'{ctx.author.mention} Did not react in time.')
             view.message = msg = await ctx.reply(f'Are you sure you want to divorce {usr.mention}?', view=view)
@@ -144,7 +144,7 @@ class Marriages(commands.Cog):
                 fn = ctx.better_reply
             return await fn(i)
 
-        mem = ctx.vystalia.get_member(data.married_to)
+        mem = ctx.askro.get_member(data.married_to)
         em = disnake.Embed(title=f'Married to `{mem.display_name}`', colour=utils.blurple)
         if member == ctx.author:
             i = 'You\'re married to'
@@ -173,7 +173,7 @@ class Marriages(commands.Cog):
 
         if ctx.author.id != self.bot._owner_id:
             if member.id != data.married_to and data.married_to != 0:
-                mem = ctx.vystalia.get_member(data.married_to)
+                mem = ctx.askro.get_member(data.married_to)
                 return await ctx.reply(
                     f'{ctx.denial} You cannot kiss `{utils.format_name(member)}`!! You can only kiss {mem.mention}'
                 )
@@ -218,13 +218,13 @@ class Marriages(commands.Cog):
                     adoptions.append(entry)
 
         if len(adoptions) == 1:
-            mem = ctx.vystalia.get_member(adoptions[0].id)
+            mem = ctx.askro.get_member(adoptions[0].id)
             return await ctx.reply(
                 f'{ctx.denial} `{utils.format_name(member)}` is already adopted by {mem.mention}'
             )
         elif len(adoptions) == 2:
-            mem1 = ctx.vystalia.get_member(adoptions[0].id)
-            mem2 = ctx.vystalia.get_member(adoptions[1].id)
+            mem1 = ctx.askro.get_member(adoptions[0].id)
+            mem2 = ctx.askro.get_member(adoptions[1].id)
             return await ctx.reply(
                 f'{ctx.denial} `{utils.format_name(member)}` is already adopted by '
                 f'{mem1.mention} and {mem2.mention}'
@@ -238,7 +238,7 @@ class Marriages(commands.Cog):
                         f'{ctx.denial} No. Only my master can own and be the daddy of {member.mention}'
                     )
                 elif member.id == owner_entry.id:
-                    married_to = ctx.vystalia.get_member(owner_entry.married_to)
+                    married_to = ctx.askro.get_member(owner_entry.married_to)
                     return await ctx.reply(
                         f'{ctx.denial} No. Only {married_to.mention} can own and be the mommy of my master.'
                     )
@@ -246,7 +246,7 @@ class Marriages(commands.Cog):
             return await ctx.reply(f'{ctx.denial} No.')
 
         if data1 and data1.married_to != 0:
-            mem = ctx.vystalia.get_member(data1.married_to)
+            mem = ctx.askro.get_member(data1.married_to)
             view = utils.ConfirmView(ctx, react_user=mem)
             view.message = await ctx.send(
                 f'{mem.mention} your partner wants to adopt {member.mention}. Do you agree?',
@@ -305,7 +305,7 @@ class Marriages(commands.Cog):
         if data is None or len(data.adoptions) == 0:
             return await ctx.reply(f'You\'ve never adopted {member.mention}.')
         elif data.married_to != 0:
-            mem = ctx.vystalia.get_member(data.married_to)
+            mem = ctx.askro.get_member(data.married_to)
             data2: Marriage = await self.bot.db.get('marriage', data.married_to)
             view = utils.ConfirmView(ctx, react_user=mem)
             view.message = await ctx.send(
@@ -354,7 +354,7 @@ class Marriages(commands.Cog):
 
                 entry.adoptions.remove(ctx.author.id)
                 await entry.commit()
-                mem = ctx.vystalia.get_member(entry.id)
+                mem = ctx.askro.get_member(entry.id)
                 await mem.send(
                     f'`{utils.format_name(ctx.author)}` Has run away from your family. '
                     'They are no longer adopted by you.',
@@ -374,11 +374,7 @@ class Marriages(commands.Cog):
 
         member = member or ctx.author
         if member.bot:
-            if member.id in (783587403716624416, 787596672128909323, 913415084179611678):
-                return await ctx.better_reply(
-                    f'{member.mention}\'s family will always be {self.bot._owner.mention}',
-                    allowed_mentions=disnake.AllowedMentions(users=False)
-                )
+            return await ctx.reply(f'Bots cannot have families.')
 
         em = disnake.Embed(color=utils.blurple)
         em.set_author(name=f'{member.display_name}\'s family', icon_url=member.display_avatar)
@@ -398,7 +394,7 @@ class Marriages(commands.Cog):
 
         adopted_by = []
         for uid in _adopted_by:
-            mem = ctx.vystalia.get_member(uid.id)
+            mem = ctx.askro.get_member(uid.id)
             if mem:
                 adopted_by.append(mem.mention)
         adopted_by = ' and '.join(adopted_by) if len(adopted_by) != 0 else 'No one.'
@@ -408,7 +404,7 @@ class Marriages(commands.Cog):
             entry = _adopted_by[0]
             for sibling in entry.adoptions:
                 if sibling != member.id:
-                    mem = ctx.vystalia.get_member(sibling)
+                    mem = ctx.askro.get_member(sibling)
                     siblings.append(f'{mem.mention} (`{mem.display_name}`)')
 
         siblings_count = len(siblings)
@@ -418,11 +414,11 @@ class Marriages(commands.Cog):
         adoptions = []
         if data is not None:
             if data.married_to != 0:
-                mem = ctx.vystalia.get_member(data.married_to)
+                mem = ctx.askro.get_member(data.married_to)
                 married_since = utils.human_timedelta(data.married_since)
                 married_to = f'{mem.mention} (married since `{married_since}`)'
             for adoption in data.adoptions:
-                mem = ctx.vystalia.get_member(adoption)
+                mem = ctx.askro.get_member(adoption)
                 adoptions.append(f'{mem.mention} (`{mem.display_name}`)')
         adoptions_count = len(adoptions)
         adoptions = '\n'.join(adoptions) if len(adoptions) != 0 else 'No adoptions.'
