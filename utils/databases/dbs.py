@@ -17,3 +17,7 @@ marriages_database = cluster3['Askro']  # Marriages
 key4 = os.getenv('MONGODBMISCKEY')
 cluster4 = motor.motor_asyncio.AsyncIOMotorClient(key4)
 misc_database = cluster4['Askro']  # Misc
+
+key5 = os.getenv('MONGODBSTORIESKEY')
+cluster5 = motor.motor_asyncio.AsyncIOMotorClient(key5)
+stories_database = cluster5['Askro']  # Stories

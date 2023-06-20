@@ -23,11 +23,14 @@ class Database:
 
             'miscellaneous': Misc,
             'misc': Misc,
-            'miscs': Misc
+            'miscs': Misc,
+
+            'stories': Story,
+            'story': Story
         }
 
         self.all_collections = [
-            Level, Mute, Marriage, Misc
+            Level, Mute, Marriage, Misc, Story
         ]
 
     async def add_to_cache(
