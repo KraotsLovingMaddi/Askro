@@ -68,6 +68,8 @@ class Askro(commands.Bot):
             else:
                 cmd.enabled = False
 
+        print('Bot is online!')
+
     @property
     def _owner(self) -> disnake.User:
         # Only returns my user.
