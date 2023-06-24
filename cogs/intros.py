@@ -393,7 +393,7 @@ class IntroEdit(Modal):
                 intro.country = v
             if 'dms' in k:
                 intro.dms = v
-            if 'likes' in k:
+            if 'likes' in k and 'dislikes' not in k:
                 intro.likes = v
             if 'dislikes' in k:
                 intro.dislikes = v
