@@ -551,7 +551,7 @@ class Intro_(commands.Cog, name='Intros'):
 
     @commands.Cog.listener('on_message')
     async def verify_on_message(self, message: disnake.Message):
-        if message.channel.id == utils.Channels.verify:
+        if message.channel.id == utils.Channels.verify and message.author.id != self.bot.user.id:
             await message.delete()
 
     @commands.Cog.listener('on_member_remove')
