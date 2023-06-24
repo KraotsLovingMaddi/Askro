@@ -529,11 +529,11 @@ class Intro_(commands.Cog, name='Intros'):
                     '>>> <:disagree:938412299746689045> You are not allowed to use this command.',
                     ephemeral=True
                 )
-            # elif member.top_role >= inter.author.top_role:
-            #     return await inter.send(
-            #         '>>> <:disagree:938412299746689045> You can\'t unverify staff members of the same or higher rank than you.',
-            #         ephemeral=True
-            #     )
+            elif member.top_role >= inter.author.top_role:
+                return await inter.send(
+                    '>>> <:disagree:938412299746689045> You can\'t unverify staff members of the same or higher rank than you.',
+                    ephemeral=True
+                )
 
         intro: Intros = await self.bot.db.get('Intros', member.id)
         if intro is None:
