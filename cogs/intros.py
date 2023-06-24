@@ -490,7 +490,7 @@ class Intro_(commands.Cog, name='Intros'):
         if intro is None:
             return await inter.send(
                 '>>> <:disagree:938412299746689045> '
-                f'{"You do not" if member.id == inter.author.id else str(member) + " does not"} '
+                f'{"You do not" if member.id == inter.author.id else member.display_name + " does not"} '
                 'have an intro.',
                 ephemeral=True
             )
@@ -542,8 +542,11 @@ class Intro_(commands.Cog, name='Intros'):
                 ephemeral=True
             )
 
-        await self.bot.db.delete('intros', {'_id': intro.id})
         guild = inter.bot.get_guild(1116770122770685982)
+        channel = guild.get_channel(utils.Channels.intros)
+        await utils.try_delete(message=intro.message_id, channel=channel)
+
+        await self.bot.db.delete('intros', {'_id': intro.id})
         unverified_role = guild.get_role(1121949200414949447)
         await member.edit(roles=[unverified_role])
         await utils.try_dm(
