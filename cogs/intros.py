@@ -538,7 +538,7 @@ class Intro_(commands.Cog, name='Intros'):
                 ephemeral=True
             )
 
-        await intro.delete()
+        await self.bot.db.delete('intros', {'_id': intro.id})
         guild = inter.bot.get_guild(1116770122770685982)
         unverified_role = guild.get_role(1121949200414949447)
         await member.edit(roles=[unverified_role])
