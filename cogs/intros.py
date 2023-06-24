@@ -549,7 +549,6 @@ class Intro_(commands.Cog, name='Intros'):
         )
         await inter.send(f'> <:agree:938412298769432586> Successfully unverified {member.mention}')
 
-
     @commands.Cog.listener('on_message')
     async def verify_on_message(self, message: disnake.Message):
         if message.channel.id == utils.Channels.verify:
