@@ -319,12 +319,15 @@ class IntroHalfTwo(Modal):
             self.intro.message_id = m.id
             await self.intro.commit()
         else:
+            await interaction.author.edit(roles=[])
+
             self.intro.message_id = m.id
             await interaction.bot.db.add('intros', self.intro)
 
         await interaction.send(
             f'Intro finished. Check it out in {channel.mention}',
-            view=utils.UrlButton('Jump!', self.intro.jump_url)
+            view=utils.UrlButton('Jump!', self.intro.jump_url),
+            ephemeral=True
         )
 
 
