@@ -3,7 +3,8 @@ from .dbs import (
     mutes_database,
     marriages_database,
     misc_database,
-    stories_database
+    stories_database,
+    intros_database
 )
 
 
@@ -24,13 +25,15 @@ from .db_mutes import Mute
 from .db_marriages import Marriage
 from .db_misc import Misc
 from .db_stories import Story
+from .db_intros import Intros
 
 __all__ = (
     'Level',
     'Mute',
     'Marriage',
     'Misc',
-    'Story'
+    'Story',
+    'Intros'
 )
 
 from .objects import Database

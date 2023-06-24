@@ -26,7 +26,10 @@ class Database:
             'miscs': Misc,
 
             'stories': Story,
-            'story': Story
+            'story': Story,
+
+            'intro': Intros,
+            'intros': Intros
         }
 
         self.all_collections = [

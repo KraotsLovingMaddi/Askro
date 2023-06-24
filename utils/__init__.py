@@ -10,3 +10,4 @@ from .time import *
 from .regex import *
 from .fuzzy import *
 from .views import *
+from .logging import *

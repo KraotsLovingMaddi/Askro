@@ -1,9 +1,5 @@
 import disnake
 from disnake.ext import commands
-from disnake.interactions import MessageInteraction
-from disnake.interactions.modal import ModalInteraction
-from disnake.ui.action_row import Components, ModalUIComponent
-from disnake.utils import MISSING
 
 import utils
 from utils import Story

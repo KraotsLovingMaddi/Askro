@@ -40,6 +40,8 @@ class Askro(commands.Bot):
         self.socket_events = Counter()
         self.execs = {}
 
+        self.webhooks = {}
+
         self.load_extension('jishaku')
         os.environ['JISHAKU_NO_DM_TRACEBACK'] = '1'
         os.environ['JISHAKU_FORCE_PAGINATOR'] = '1'
@@ -56,6 +58,7 @@ class Askro(commands.Bot):
     async def on_ready(self):
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
+            await self.db.add_to_cache()
 
         data: utils.Misc = await utils.Misc.get()
         if data is None:
@@ -67,6 +70,29 @@ class Askro(commands.Bot):
                 await data.commit()
             else:
                 cmd.enabled = False
+
+        if len(self.webhooks) == 0:
+            av = self.user.display_avatar
+            logs = await self.get_webhook(
+                self.get_channel(utils.Channels.logs),
+                avatar=av
+            )
+            mod_logs = await self.get_webhook(
+                self.get_channel(utils.Channels.moderation_logs),
+                avatar=av
+            )
+            message_logs = await self.get_webhook(
+                self.get_channel(utils.Channels.messages_logs),
+                avatar=av
+            )
+            welcome_webhook = await self.get_webhook(
+                self.get_channel(utils.Channels.welcome),
+                avatar=av
+            )
+            self.webhooks['logs'] = logs
+            self.webhooks['mod_logs'] = mod_logs
+            self.webhooks['message_logs'] = message_logs
+            self.webhooks['welcome_webhook'] = welcome_webhook
 
         print('Bot is online!')
 
@@ -93,7 +119,7 @@ class Askro(commands.Bot):
         self,
         channel: disnake.TextChannel,
         *,
-        name: str = "askro",
+        name: str = "Askro",
         avatar: disnake.Asset = None,
     ) -> disnake.Webhook:
         """Returns the general bot hook or creates one."""

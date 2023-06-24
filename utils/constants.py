@@ -16,6 +16,7 @@ __all__ = (
     'NUMBERS_EMOJI',
     'NUMBERS_TABLE',
     'Channels',
+    'StaffRoles'
 )
 
 FIRST_JANUARY_1970 = datetime(1970, 1, 1, 0, 0, 0, 0)
@@ -54,9 +55,13 @@ EMOJIS_TABLE = str.maketrans({v: k for k, v in LETTERS_EMOJI.items()})
 
 
 class Channels(NamedTuple):
+    verify = 1121949315137544292
+
     rules = 1116784327359991918
     news = 1116785847203790929
+    welcome = 1121924923158450237
     colours = 1116854269648318555
+    intros = 1121913011645460600
     youtube = 1116855788116398271
 
     general = 1116770347384045618
@@ -71,4 +76,14 @@ class Channels(NamedTuple):
 
     staff_chat = 1116786173621309481
     bot_commands = 1117148228941525012
+
+    logs = 1117162498735476767
+    messages_logs = 1117162512438284338
+    moderation_logs = 1121924279655743548
+    github = 1117162553106239559
     discord_notifications = 1116784327359991919
+    roblox_logs = 1117941905376956519
+
+
+class StaffRoles(NamedTuple):
+    owner = 1116783793605447700
