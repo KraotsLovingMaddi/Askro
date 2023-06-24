@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/main": {
+      "runtime": "vercel.python.runtime.v3-9",
+      "memory": 512
+    }
+  }
+}
