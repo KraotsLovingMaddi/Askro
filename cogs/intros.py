@@ -306,6 +306,7 @@ class IntroHalfTwo(Modal):
         self.intro.likes = values['Likes']
         self.intro.dislikes = values['Dislikes']
         self.intro.hobbies = values['Hobbies']
+        self.intro.created_at = datetime.now()
 
         channel = interaction.bot.get_guild(1116770122770685982).get_channel(utils.Channels.intros)
         em = create_intro_embed(self.intro, interaction.author)
