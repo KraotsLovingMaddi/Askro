@@ -180,5 +180,21 @@ class Askro(commands.Bot):
         else:
             await inter.response.send_message(fmt, ephemeral=True)
 
+    @property
+    def agree(self) -> disnake.PartialEmoji:
+        return disnake.PartialEmoji(name='agree', id=938412195627290684)
+
+    @property
+    def disagree(self) -> disnake.PartialEmoji:
+        return disnake.PartialEmoji(name='disagree', id=938412196663271514)
+
+    @property
+    def thumb(self) -> disnake.PartialEmoji:
+        return disnake.PartialEmoji(name='thumb', id=938412204926062602)
+
+    @property
+    def denial(self) -> str:
+        return f'>>> {self.disagree}'
+
 
 Askro().run(TOKEN)

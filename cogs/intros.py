@@ -194,12 +194,12 @@ class IntroHalfOne(Modal):
             if values['Age'] < 14:
                 await utils.try_dm(
                     interaction.author,
-                    '>>> <:disagree:938412299746689045> Sorry! You are too young for this server.'
+                    f'{interaction.bot.denial} Sorry! You are too young for this server.'
                 )
             elif values['Age'] > 19:
                 await utils.try_dm(
                     interaction.author,
-                    '>>> <:disagree:938412299746689045> Sorry! You are too old for this server.'
+                    f'{interaction.bot.denial} Sorry! You are too old for this server.'
                 )
             await interaction.author.ban(reason='User does not match age limits.')
             return await utils.log(
@@ -412,12 +412,12 @@ class IntroEdit(Modal):
             if intro.age < 14:
                 await utils.try_dm(
                     interaction.author,
-                    '>>> <:disagree:938412299746689045> Sorry! You are too young for this server.'
+                    f'{interaction.bot.denial} Sorry! You are too young for this server.'
                 )
             elif intro.age > 19:
                 await utils.try_dm(
                     interaction.author,
-                    '>>> <:disagree:938412299746689045> Sorry! You are too old for this server.'
+                    f'{interaction.bot.denial} Sorry! You are too old for this server.'
                 )
             await interaction.author.ban(reason='User does not match age limits.')
             return await utils.log(
@@ -489,7 +489,7 @@ class Intro_(commands.Cog, name='Intros'):
         intro: Intros = await self.bot.db.get('intros', member.id)
         if intro is None:
             return await inter.send(
-                '>>> <:disagree:938412299746689045> '
+                f'{self.bot.denial} '
                 f'{"You do not" if member.id == inter.author.id else member.display_name + " does not"} '
                 'have an intro.',
                 ephemeral=True
@@ -513,7 +513,7 @@ class Intro_(commands.Cog, name='Intros'):
         intro: Intros = await self.bot.db.get('intros', inter.author.id)
         if intro is None:
             return await inter.send(
-                '>>> <:disagree:938412299746689045> You do not have an intro.',
+                f'{self.bot.denial} You do not have an intro.',
                 ephemeral=True
             )
 
@@ -526,19 +526,19 @@ class Intro_(commands.Cog, name='Intros'):
         if inter.author.id not in self.bot.owner_ids:
             if not any(r for r in (utils.StaffRoles.owner,) if r in (role.id for role in inter.author.roles)):
                 return await inter.send(
-                    '>>> <:disagree:938412299746689045> You are not allowed to use this command.',
+                    f'{self.bot.denial} You are not allowed to use this command.',
                     ephemeral=True
                 )
             elif member.top_role >= inter.author.top_role:
                 return await inter.send(
-                    '>>> <:disagree:938412299746689045> You can\'t unverify staff members of the same or higher rank than you.',
+                    f'{self.bot.denial} You can\'t unverify staff members of the same or higher rank than you.',
                     ephemeral=True
                 )
 
         intro: Intros = await self.bot.db.get('Intros', member.id)
         if intro is None:
             return await inter.send(
-                f'>>> <:disagree:938412299746689045> {member.mention} does not have an intro.',
+                f'{self.bot.denial} {member.mention} does not have an intro.',
                 ephemeral=True
             )
 
@@ -554,7 +554,7 @@ class Intro_(commands.Cog, name='Intros'):
             f'Hello! You have been unverified in `{guild.name}`. '
             f'To verify again go to <#{utils.Channels.verify}> and type `/intro create`'
         )
-        await inter.send(f'> <:agree:938412298769432586> Successfully unverified {member.mention}')
+        await inter.send(f'> {self.bot.agree} Successfully unverified {member.mention}')
 
     @commands.Cog.listener('on_message')
     async def verify_on_message(self, message: disnake.Message):

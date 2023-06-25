@@ -13,58 +13,90 @@ class Marriages(commands.Cog):
     """Marriage commands."""
     def __init__(self, bot: Askro):
         self.bot = bot
+        self.currently_marrying: bool = False
+        self.currently_divorcing: bool = False
+        self.currently_adopting: bool = False
+        self.currently_unadopting: bool = False
 
     @property
     def display_emoji(self) -> str:
         return '❤️'
 
-    @commands.command()
-    @commands.max_concurrency(1, commands.BucketType.guild)
-    async def marry(self, ctx: Context, *, member: disnake.Member):
-        """Marry the member if they want to and if you're/they're not taken by somebody else already.
+    @commands.slash_command(name='marry')
+    async def marry(self, inter: disnake.AppCmdInter, member: disnake.Member):
+        """Marry the member if they want to and if you're/they're not taken by somebody else already."""
 
-        `member` **->** The member you wish to marry. You can either ping them, give their discord id, or just type in their username
-        """
+        if self.currently_marrying is True:
+            return await inter.send(
+                'Uh oh.. looks like someone is already trying to marry! Wait for them to finish.',
+                ephemeral=True
+            )
+        self.currently_marrying = True
 
-        if ctx.author == member:
-            return await ctx.reply(f'{ctx.denial} You cannot marry yourself.')
-        elif member.bot and ctx.author.id != self.bot._owner_id:
-            return await ctx.reply(f'{ctx.denial} You cannot marry bots.')
+        if inter.author == member:
+            self.currently_marrying = False
+            return await inter.send(
+                f'{self.bot.denial} You cannot marry yourself.',
+                ephemeral=True
+            )
+        elif member.bot and inter.author.id != self.bot._owner_id:
+            self.currently_marrying = False
+            return await inter.send(
+                f'{self.bot.denial} You cannot marry bots.',
+                ephemeral=True
+            )
 
-        data1: Marriage = await self.bot.db.get('marriage', ctx.author.id)
+        data1: Marriage = await self.bot.db.get('marriage', inter.author.id)
+        guild = self.bot.get_guild(1116770122770685982)
         if data1 and data1.married_to != 0:
-            mem = ctx.askro.get_member(data1.married_to)
-            return await ctx.reply(f'{ctx.denial} You are already married to {mem.mention}')
+            self.currently_marrying = False
+            mem = guild.get_member(data1.married_to)
+            return await inter.send(f'{self.bot.denial} You are already married to {mem.mention}')
         elif data1 and member.id in data1.adoptions:
-            return await ctx.reply(
-                f'{ctx.denial} You cannot marry the person that you adopted.'
+            self.currently_marrying = False
+            return await inter.send(
+                f'{self.bot.denial} You cannot marry the person that you adopted.',
+                ephemeral=True
             )
 
         data2: Marriage = await self.bot.db.get('marriage', member.id)
         if data2 and data2.married_to != 0:
-            mem = ctx.askro.get_member(data2.married_to)
-            return await ctx.reply(f'{ctx.denial} `{utils.format_name(member)}` is already married to {mem.mention}')
-        elif data2 and ctx.author.id in data2.adoptions:
-            return await ctx.reply(
-                f'{ctx.denial} You cannot marry the person that adopted you.'
+            self.currently_marrying = False
+            mem = guild.get_member(data2.married_to)
+            return await inter.send(
+                f'{self.bot.denial} `{member.display_name}` is already married to {mem.mention}'
             )
-        elif member.id == self.bot._owner_id:
-            return await ctx.reply(f'{ctx.denial} No.')
+        elif data2 and inter.author.id in data2.adoptions:
+            self.currently_marrying = False
+            return await inter.send(
+                f'{self.bot.denial} You cannot marry the person that adopted you.',
+                ephemeral=True
+            )
+        elif member.id in self.bot.owner_ids:
+            self.currently_marrying = False
+            return await inter.send(f'{self.bot.denial} No.', ephemeral=True)
 
-        view = utils.ConfirmView(ctx, f'{ctx.denial} {member.mention} Did not react in time.', member)
-        view.message = msg = await ctx.send(f'{member.mention} do you want to marry {ctx.author.mention}?', view=view)
+        view = utils.ConfirmViewInteraction(
+            inter,
+            new_message=f'{self.bot.denial} {member.mention} Did not react in time.',
+            react_user=member
+        )
+        await inter.send(
+            f'{member.mention} do you want to marry {inter.author.mention}?',
+            view=view
+        )
         await view.wait()
         if view.response is True:
             now = datetime.utcnow()
 
             if data1 is None:
                 await self.bot.db.add('marriages', Marriage(
-                    id=ctx.author.id,
+                    id=inter.author.id,
                     married_to=0,
                     married_since=utils.FIRST_JANUARY_1970,
                     adoptions=[]
                 ))
-                data1 = await self.bot.db.get('marriage', ctx.author.id)
+                data1 = await self.bot.db.get('marriage', inter.author.id)
 
             if data2 is None:
                 await self.bot.db.add('marriages', Marriage(
@@ -82,37 +114,56 @@ class Marriages(commands.Cog):
                     data1.adoptions.append(adoption)
             await data1.commit()
 
-            data2.married_to = ctx.author.id
+            data2.married_to = inter.author.id
             data2.married_since = now
             for adoption in data1.adoptions:
                 if adoption not in data2.adoptions:
                     data2.adoptions.append(adoption)
             await data2.commit()
 
-            await ctx.send(f'`{ctx.author.display_name}` married `{member.display_name}`!!! :heart: :tada: :tada:')
-            await utils.try_delete(msg)
+            await inter.delete_original_response()
+            await inter.send(
+                f'`{inter.author.display_name}` married `{member.display_name}`!!! :heart: :tada: :tada:'
+            )
+            self.currently_marrying = False
 
         elif view.response is False:
-            await ctx.send(f'`{member.display_name}` does not want to marry you. {ctx.author.mention} :pensive: :fist:')
-            await utils.try_delete(msg)
+            await inter.delete_original_response()
+            await inter.send(
+                f'`{member.display_name}` does not want to marry you. {inter.author.mention} :pensive: :fist:'
+            )
+            self.currently_marrying = False
 
-    @commands.command()
-    @commands.max_concurrency(1, commands.BucketType.user)
-    async def divorce(self, ctx: Context):
+    @commands.slash_command(name='divorce')
+    async def divorce(self, inter: disnake.AppCmdInter):
         """Divorce the person you're married with in case you're married with anybody."""
 
-        data: Marriage = await self.bot.db.get('marriage', ctx.author.id)
+        if self.currently_divorcing is True:
+            return await inter.send(
+                'Uh oh.. it seems that there\'s already a divorce going on in the server! '
+                'Wait for them to finish.',
+                ephemeral=True
+            )
+        self.currently_divorcing = True
+
+        data: Marriage = await self.bot.db.get('marriage', inter.author.id)
 
         if data is None or data.married_to == 0:
-            return await ctx.reply(f'{ctx.denial} You are not married to anyone.')
+            self.currently_divorcing = False
+            return await inter.send(f'{self.bot.denial} You are not married to anyone.', ephemeral=True)
 
         else:
-            usr = ctx.askro.get_member(data.married_to)
+            guild = self.bot.get_guild(1116770122770685982)
+            usr = guild.get_member(data.married_to)
 
-            view = utils.ConfirmView(ctx, f'{ctx.author.mention} Did not react in time.')
-            view.message = msg = await ctx.reply(f'Are you sure you want to divorce {usr.mention}?', view=view)
+            view = utils.ConfirmViewInteraction(
+                inter,
+                new_message=f'{inter.author.mention} Did not react in time.'
+            )
+            await inter.send(f'Are you sure you want to divorce {usr.mention}?', view=view)
             await view.wait()
             if view.response is True:
+                self.currently_divorcing = False
                 mem: Marriage = await self.bot.db.get('marriage', usr.id)
                 await self.bot.db.delete('marriages', {'_id': data.pk})
                 await self.bot.db.delete('marriages', {'_id': mem.pk})
@@ -120,159 +171,183 @@ class Marriages(commands.Cog):
                 e = f'You divorced {usr.mention} that you have been married ' \
                     f'since {utils.format_dt(data.married_since, "F")} ' \
                     f'(`{utils.human_timedelta(data.married_since)}`)'
-                return await msg.edit(content=e, view=view)
+                return await inter.edit_original_message(content=e, view=view)
 
             elif view.response is False:
+                self.currently_divorcing = False
                 e = f'You did not divorce {usr.mention}'
-                return await msg.edit(content=e, view=view)
+                return await inter.edit_original_message(content=e, view=view)
 
-    @commands.command(aliases=('marriedwho', 'marriedsince'))
-    async def marriage(self, ctx: Context, *, member: disnake.Member = None):
-        """See who, who, the date and how much it's been since the member married their partner if they have one.
+    @commands.slash_command(name='marriage')
+    async def marriage(
+        self,
+        inter: disnake.AppCmdInter,
+        member: disnake.Member = commands.Param(lambda inter: inter.author)
+    ):
+        """See who, the date and how much it's been since the member married their partner if they have one."""
 
-        `member` **->** The member you want to see who they are married with. If you want to see who you married, you can ignore this.
-        """
-
-        member = member or ctx.author
         data: Marriage = await self.bot.db.get('marriage', member.id)
         if data is None or data.married_to == 0:
-            if member == ctx.author:
-                i = f'{ctx.denial} You\'re not married to anyone.'
-                fn = ctx.reply
+            if member == inter.author:
+                i = f'{self.bot.denial} You\'re not married to anyone.'
             else:
-                i = f'{ctx.denial} {member.mention} is not married to anyone.'
-                fn = ctx.better_reply
-            return await fn(i)
+                i = f'{self.bot.denial} {member.mention} is not married to anyone.'
+            return await inter.send(i, ephemeral=True)
 
-        mem = ctx.askro.get_member(data.married_to)
+        guild = self.bot.get_guild(1116770122770685982)
+        mem = guild.get_member(data.married_to)
         em = disnake.Embed(title=f'Married to `{mem.display_name}`', colour=utils.blurple)
-        if member == ctx.author:
+        if member == inter.author:
             i = 'You\'re married to'
-            fn = ctx.reply
         else:
             i = f'{member.mention} is married to'
-            fn = ctx.better_reply
         em.description = f'{i} {mem.mention} ' \
                          f'since {utils.format_dt(data.married_since, "F")} ' \
                          f'(`{utils.human_timedelta(data.married_since, accuracy=6)}`)'
-        await fn(embed=em)
+        await inter.send(embed=em)
 
-    @commands.command(name='kiss')
-    async def _kiss(self, ctx: Context, *, member: disnake.Member):
-        """Kiss the person you are married with.
+    @commands.slash_command(name='kiss')
+    async def _kiss(self, inter: disnake.AppCmdInter, member: disnake.Member):
+        """Kiss the person you are married with."""
 
-        `member` **->** The member you want to kiss. You can only kiss the person you are married with.
-
-        If for some reason you don't know who you're married to, you are a complete jerk but luckily for you, there's the command `!marriage` which reminds you who you are married to, and for how long.
-        """  # noqa
-
-        data = await self.bot.db.get('marriage', ctx.author.id)
-        if ctx.author.id != self.bot._owner_id:
+        guild = self.bot.get_guild(1116770122770685982)
+        data = await self.bot.db.get('marriage', inter.author.id)
+        if inter.author.id != self.bot._owner_id:
             if data is None or data.married_to == 0:
-                return await ctx.reply(f'{ctx.denial} You must be married to {member.mention} in order to kiss them.')
+                return await inter.send(
+                    f'{self.bot.denial} You must be married to {member.mention} in order to kiss them.'
+                )
 
-        if ctx.author.id != self.bot._owner_id:
+        if inter.author.id != self.bot._owner_id:
             if member.id != data.married_to and data.married_to != 0:
-                mem = ctx.askro.get_member(data.married_to)
-                return await ctx.reply(
-                    f'{ctx.denial} You cannot kiss `{utils.format_name(member)}`!! You can only kiss {mem.mention}'
+                mem = guild.get_member(data.married_to)
+                return await inter.send(
+                    f'{self.bot.denial} You cannot kiss `{utils.format_name(member)}`!! '
+                    f'You can only kiss {mem.mention}'
                 )
 
         em = disnake.Embed(color=utils.red)
         em.set_image(url='https://cdn.discordapp.com/attachments/938411306762002456/938475662556151838/kiss.gif')
-        await ctx.send(
-            f'{ctx.author.mention} is giving you a hot kiss {member.mention} 🥺 💋',
+        await inter.send(
+            f'{inter.author.mention} is giving you a hot kiss {member.mention} 🥺 💋',
             embed=em
         )
 
-    @commands.command()
-    @commands.max_concurrency(1, commands.BucketType.user)
-    async def adopt(self, ctx: Context, *, member: disnake.Member):
-        """Adopt someone.
+    @commands.slash_command(name='adopt')
+    async def adopt(self, inter: disnake.AppCmdInter, member: disnake.Member):
+        """Adopt someone into your family."""
 
-        `member` **->** The member you want to adopt.
-        """
+        if self.currently_adopting is True:
+            return await inter.send(
+                'Uh oh.. it seems like there\'s already an adoption going on in the server! '
+                'Wait for them to finish.',
+                ephemeral=True
+            )
+        self.currently_adopting = True
 
-        if member.id == ctx.author.id:
-            return await ctx.reply(f'{ctx.denial} You cannot adopt yourself.')
-        elif member.bot and ctx.author.id != self.bot._owner_id:
-            return await ctx.reply(f'{ctx.denial} You cannot adopt bots.')
+        if member.id == inter.author.id:
+            self.currently_adopting = False
+            return await inter.send(f'{self.bot.denial} You cannot adopt yourself.', ephemeral=True)
+        elif member.bot and inter.author.id not in self.bot.owner_ids:
+            self.currently_adopting = False
+            return await inter.send(f'{self.bot.denial} You cannot adopt bots.', ephemeral=True)
 
         partner = False
-        data1: Marriage = await self.bot.db.get('marriage', ctx.author.id)
+        data1: Marriage = await self.bot.db.get('marriage', inter.author.id)
 
-        if data1 and len(data1.adoptions) >= 7 and ctx.author.id != self.bot._owner_id:
-            return await ctx.reply(f'{ctx.denial} You cannot adopt more than **7** people.')
+        if data1 and len(data1.adoptions) >= 7 and inter.author.id not in self.bot.owner_ids:
+            self.currently_adopting = False
+            return await inter.send(
+                f'{self.bot.denial} You cannot adopt more than **7** people.',
+                ephemeral=True
+            )
 
         data2: Marriage = await self.bot.db.get('marriage', member.id)
-        if data2 and ctx.author.id in data2.adoptions:
-            return await ctx.reply(
-                f'{ctx.denial} You cannot adopt the person that adopted you, what are you, dumb???'
+        if data2 and inter.author.id in data2.adoptions:
+            self.currently_adopting = False
+            return await inter.send(
+                f'{self.bot.denial} You cannot adopt the person that adopted you, what are you, dumb???',
+                ephemeral=True
             )
         elif data1 and member.id in data1.adoptions:
-            return await ctx.reply(f'{ctx.denial} You already adopted that person.')
+            self.currently_adopting = False
+            return await inter.send(
+                f'{self.bot.denial} You already adopted that person.',
+                ephemeral=True
+            )
         else:
             adoptions = []
             for entry in await self.bot.db.find('marriage'):
                 if member.id in entry.adoptions:
                     adoptions.append(entry)
 
+        guild = self.bot.get_guild(1116770122770685982)
         if len(adoptions) == 1:
-            mem = ctx.askro.get_member(adoptions[0].id)
-            return await ctx.reply(
-                f'{ctx.denial} `{utils.format_name(member)}` is already adopted by {mem.mention}'
+            self.currently_adopting = False
+            mem = guild.get_member(adoptions[0].id)
+            return await inter.send(
+                f'{self.bot.denial} `{member.display_name}` is already adopted by {mem.mention}'
             )
         elif len(adoptions) == 2:
-            mem1 = ctx.askro.get_member(adoptions[0].id)
-            mem2 = ctx.askro.get_member(adoptions[1].id)
-            return await ctx.reply(
-                f'{ctx.denial} `{utils.format_name(member)}` is already adopted by '
-                f'{mem1.mention} and {mem2.mention}'
+            self.currently_adopting = False
+            mem1 = guild.get_member(adoptions[0].id)
+            mem2 = guild.get_member(adoptions[1].id)
+            return await inter.send(
+                f'{self.bot.denial} `{member.display_name}` is already adopted by '
+                f'{mem1.mention} and {mem2.mention}',
             )
 
         owner_entry = await self.bot.db.get('marriage')
         if owner_entry is not None:
             if owner_entry.married_to != 0:
                 if member.id == owner_entry.married_to:
-                    return await ctx.reply(
-                        f'{ctx.denial} No. Only my master can own and be the daddy of {member.mention}'
+                    self.currently_adopting = False
+                    return await inter.send(
+                        f'{self.bot.denial} No. Only my master can own and be the daddy of {member.mention}'
                     )
                 elif member.id == owner_entry.id:
-                    married_to = ctx.askro.get_member(owner_entry.married_to)
-                    return await ctx.reply(
-                        f'{ctx.denial} No. Only {married_to.mention} can own and be the mommy of my master.'
+                    self.currently_adopting = False
+                    married_to = guild.get_member(owner_entry.married_to)
+                    return await inter.send(
+                        f'{self.bot.denial} No. Only {married_to.mention} can own and be the mommy of my master.'
                     )
-        elif member.id == self.bot._owner_id:
-            return await ctx.reply(f'{ctx.denial} No.')
+        elif member.id in self.bot.owner_ids:
+            self.currently_adopting = False
+            return await inter.send(f'{self.bot.denial} No.', ephemeral=True)
 
         if data1 and data1.married_to != 0:
-            mem = ctx.askro.get_member(data1.married_to)
-            view = utils.ConfirmView(ctx, react_user=mem)
-            view.message = await ctx.send(
+            mem = guild.get_member(data1.married_to)
+            view = utils.ConfirmViewInteraction(inter, react_user=mem)
+            await inter.send(
                 f'{mem.mention} your partner wants to adopt {member.mention}. Do you agree?',
                 view=view
             )
             await view.wait()
             if view.response is False:
-                return await view.message.edit(
-                    content=f'{ctx.author.mention} It seems like your partner did not want to adopt {member.mention}.'
+                self.currently_adopting = False
+                return await inter.edit_original_message(
+                    content=f'{inter.author.mention} It seems like your partner did not want to adopt {member.mention}.',
+                    view=view
                 )
             else:
                 partner = True
 
-        view = utils.ConfirmView(ctx, react_user=member)
-        view.message = await ctx.send(
-            f'{member.mention} do you wish to be part of **{ctx.author.display_name}**\'s family?',
+        view = utils.ConfirmViewInteraction(inter, react_user=member)
+        await inter.edit_original_message(
+            f'{member.mention} do you wish to be part of **{inter.author.display_name}**\'s family?',
             view=view
         )
         await view.wait()
         if view.response is False:
-            return await view.message.edit(
-                content=f'{ctx.author.mention} It seems like {member.mention} does not want to be part of your family.'
+            self.currently_adopting = False
+            return await inter.edit_original_message(
+                content=f'{inter.author.mention} It seems like {member.mention} does not want to be part of your family.',
+                view=view
             )
         else:
-            await view.message.edit(
-                content=f'{member.mention} You are now part of **{ctx.author.display_name}**\'s family.'
+            await inter.edit_original_message(
+                content=f'{member.mention} You are now part of **{inter.author.display_name}**\'s family.',
+                view=view
             )
 
         if partner is True:
@@ -282,42 +357,52 @@ class Marriages(commands.Cog):
 
         if data1 is None:
             await self.bot.db.add('marriages', Marriage(
-                id=ctx.author.id,
+                id=inter.author.id,
                 married_to=0,
                 married_since=utils.FIRST_JANUARY_1970,
                 adoptions=[]
             ))
-            data1 = await self.bot.db.get('marriage', ctx.author.id)
+            data1 = await self.bot.db.get('marriage', inter.author.id)
         data1.adoptions.append(member.id)
         await data1.commit()
 
-        await ctx.reply(f'You have adopted {member.mention} :heart: :tada:')
+        await inter.send(f'You have adopted {member.mention} :heart: :tada:')
+        self.currently_adopting = False
 
-    @commands.command()
-    @commands.max_concurrency(1, commands.BucketType.user)
-    async def unadopt(self, ctx: Context, *, member: disnake.Member):
-        """Unadopt a member.
+    @commands.slash_command(name='unadopt')
+    async def unadopt(self, inter: disnake.AppCmdInter, member: disnake.Member):
+        """Unadopt one of your children."""
 
-        `member` **->** The member you want to not be adopted by you anymore.
-        """
+        if self.currently_unadopting is True:
+            return await inter.send(
+                'Uh oh.. looks like there\'s already an unadoption running in the server! '
+                'Wait for them to finish.',
+                ephemeral=True
+            )
+        self.currently_unadopting = True
 
-        data: Marriage = await self.bot.db.get('marriage', ctx.author.id)
+        guild = self.bot.get_guild(1116770122770685982)
+        data: Marriage = await self.bot.db.get('marriage', inter.author.id)
         if data is None or len(data.adoptions) == 0:
-            return await ctx.reply(f'You\'ve never adopted {member.mention}.')
+            self.currently_unadopting = False
+            return await inter.send(f'You\'ve never adopted {member.mention}.')
         elif data.married_to != 0:
-            mem = ctx.askro.get_member(data.married_to)
+            mem = guild.get_member(data.married_to)
             data2: Marriage = await self.bot.db.get('marriage', data.married_to)
-            view = utils.ConfirmView(ctx, react_user=mem)
-            view.message = await ctx.send(
+            view = utils.ConfirmViewInteraction(inter, react_user=mem)
+            await inter.send(
                 f'{mem.mention} your partner wants to unadopt {member.mention}. Do you agree?',
                 view=view
             )
             await view.wait()
             if view.response is False:
-                return await view.message.edit(
-                    content=f'{ctx.author.mention} It seems like your partner did not want to unadopt {member.mention}.'
+                self.currently_unadopting = False
+                return await inter.edit_original_message(
+                    content=f'{inter.author.mention} It seems like your partner did not want to unadopt {member.mention}.',
+                    view=None
                 )
             else:
+                await inter.edit_original_message(view=view)
                 data2.adoptions.remove(member.id)
                 await data2.commit()
         data.adoptions.remove(member.id)
@@ -326,55 +411,56 @@ class Marriages(commands.Cog):
         else:
             await data.commit()
 
-        await ctx.reply(f'You have unadopted {member.mention}')
+        await inter.send(f'You have unadopted {member.mention}')
+        self.currently_unadopting = False
 
-    @commands.command()
-    async def runaway(self, ctx: Context):
+    @commands.slash_command(name='runaway')
+    async def runaway(self, inter: disnake.AppCmdInter):
         """Run away from your family. That means you will "unadopt" yourself."""
 
         entries: Marriage = await self.bot.db.find('marriage')
+        guild = self.bot.get_guild(1116770122770685982)
         if not entries:
-            return await ctx.reply(f'{ctx.denial} You are not adopted by anybody.')
+            return await inter.send(f'{self.bot.denial} You are not adopted by anybody.', ephemeral=True)
         else:
             for entry in entries:
                 entry: Marriage
 
-                if ctx.author.id not in entry.adoptions:
+                if inter.author.id not in entry.adoptions:
                     continue
 
                 if entry.id == self.bot._owner_id or entry.married_to == self.bot._owner_id:
-                    await self.bot._owner.send(
-                        f'{utils.format_name(ctx.author)}` Has tried to run away.',
-                        view=utils.UrlButton('Jump!', ctx.message.jump_url)
+                    await guild.get_member(entry.id).send(
+                        f'{inter.author.display_name}` Has tried to run away.'
                     )
-                    return await ctx.reply(
+                    return await inter.send(
                         'You cannot run away from my master. '
-                        'He\'s been notified about your misbehaviour.'
+                        'He\'s been notified about your misbehaviour.',
+                        ephemeral=True
                     )
 
-                entry.adoptions.remove(ctx.author.id)
+                entry.adoptions.remove(inter.author.id)
                 await entry.commit()
-                mem = ctx.askro.get_member(entry.id)
-                await mem.send(
-                    f'`{utils.format_name(ctx.author)}` Has run away from your family. '
-                    'They are no longer adopted by you.',
-                    view=utils.UrlButton('Jump!', ctx.message.jump_url)
+                await guild.get_member(entry.id).send(
+                    f'`{inter.author.display_name}` Has run away from your family. '
+                    'They are no longer adopted by you.'
                 )
-        await ctx.reply(
+        await inter.send(
             'You have run away from your family. '
             'You are not adopted anymore and your ex-step-parents have been notified about this.'
         )
 
-    @commands.command()
-    async def family(self, ctx: Context, *, member: disnake.Member = None):
+    @commands.slash_command(name='family')
+    async def family(
+        self,
+        inter: disnake.AppCmdInter,
+        member: disnake.Member = commands.Param(lambda inter: inter.author)
+    ):
         """See your family members. This basically shows you who you have adopted, and who you are married to.
-
-        `member` **->** The member who's family you want to see. Defaults to you.
         """
 
-        member = member or ctx.author
         if member.bot:
-            return await ctx.reply(f'Bots cannot have families.')
+            return await inter.send('Bots cannot have families.', ephemeral=True)
 
         em = disnake.Embed(color=utils.blurple)
         em.set_author(name=f'{member.display_name}\'s family', icon_url=member.display_avatar)
@@ -387,14 +473,15 @@ class Marriages(commands.Cog):
                 _adopted_by.append(entry)
 
         if data is None and len(_adopted_by) == 0:
-            if member.id == ctx.author.id:
-                return await ctx.reply('You don\'t have a family :frowning:')
+            if member.id == inter.author.id:
+                return await inter.send('You don\'t have a family :frowning:', ephemeral=True)
             else:
-                return await ctx.reply(f'{member.mention} doesn\'t have a family :frowning:')
+                return await inter.send(f'{member.mention} doesn\'t have a family :frowning:', ephemeral=True)
 
+        guild = self.bot.get_guild(1116770122770685982)
         adopted_by = []
         for uid in _adopted_by:
-            mem = ctx.askro.get_member(uid.id)
+            mem = guild.get_member(uid.id)
             if mem:
                 adopted_by.append(mem.mention)
         adopted_by = ' and '.join(adopted_by) if len(adopted_by) != 0 else 'No one.'
@@ -404,7 +491,7 @@ class Marriages(commands.Cog):
             entry = _adopted_by[0]
             for sibling in entry.adoptions:
                 if sibling != member.id:
-                    mem = ctx.askro.get_member(sibling)
+                    mem = guild.get_member(sibling)
                     siblings.append(f'{mem.mention} (`{mem.display_name}`)')
 
         siblings_count = len(siblings)
@@ -414,11 +501,11 @@ class Marriages(commands.Cog):
         adoptions = []
         if data is not None:
             if data.married_to != 0:
-                mem = ctx.askro.get_member(data.married_to)
+                mem = guild.get_member(data.married_to)
                 married_since = utils.human_timedelta(data.married_since)
                 married_to = f'{mem.mention} (married since `{married_since}`)'
             for adoption in data.adoptions:
-                mem = ctx.askro.get_member(adoption)
+                mem = guild.get_member(adoption)
                 adoptions.append(f'{mem.mention} (`{mem.display_name}`)')
         adoptions_count = len(adoptions)
         adoptions = '\n'.join(adoptions) if len(adoptions) != 0 else 'No adoptions.'
@@ -427,9 +514,9 @@ class Marriages(commands.Cog):
         em.add_field(f'Adoptions ({adoptions_count})', adoptions, inline=False)
         em.add_field('Adopted By', adopted_by, inline=False)
         em.add_field(f'Siblings ({siblings_count})', siblings, inline=False)
-        em.set_footer(text=f'Requested By: {utils.format_name(ctx.author)}')
+        em.set_footer(text=f'Requested by: {inter.author.display_name}')
 
-        await ctx.better_reply(embed=em)
+        await inter.send(embed=em)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):

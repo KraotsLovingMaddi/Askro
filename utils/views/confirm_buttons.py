@@ -138,22 +138,51 @@ class ConfirmViewInteraction(disnake.ui.View):
     they clicked is No.
     """
 
-    def __init__(self, inter: disnake.MessageInteraction, *, timeout=180.0, new_message: str = 'Time Expired.'):
+    def __init__(
+            self,
+            inter: disnake.MessageInteraction,
+            *,
+            timeout=180.0,
+            new_message: str = 'Time Expired.',
+            react_user: disnake.Member = None
+        ):
         super().__init__(timeout=timeout)
         self.inter = inter
         self.new_message = new_message
         self.response = False
+        self.member = react_user
+
+    async def interaction_check(self, interaction: disnake.MessageInteraction):
+        check_for = self.inter.author.id if self.member is None else self.member.id
+        if interaction.author.id not in (check_for, *interaction.bot._owner_ids):
+            await interaction.response.send_message(
+                f'Only {self.inter.author.display_name if self.member is None else self.member.display_name} '
+                'can use the buttons on this message!',
+                ephemeral=True
+            )
+            return False
+        return True
 
     async def on_error(self, error, item, inter):
-        await self.bot.inter_reraise(inter, item, error)
+        await inter.bot.inter_reraise(inter, item, error)
 
     @disnake.ui.button(label='Yes', style=disnake.ButtonStyle.green)
     async def yes_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
         await inter.response.defer()
         self.response = True
+        for item in self.children:
+            item.disabled = True
+            item.style = disnake.ButtonStyle.grey
+            if item.label == button.label:
+                item.style = disnake.ButtonStyle.blurple
         self.stop()
 
     @disnake.ui.button(label='No', style=disnake.ButtonStyle.red)
     async def no_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
         await inter.response.defer()
+        for item in self.children:
+            item.disabled = True
+            item.style = disnake.ButtonStyle.grey
+            if item.label == button.label:
+                item.style = disnake.ButtonStyle.blurple
         self.stop()
