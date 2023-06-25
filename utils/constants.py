@@ -88,3 +88,5 @@ class Channels(NamedTuple):
 
 class StaffRoles(NamedTuple):
     owner = 1116783793605447700
+    admin = 1122615777707700344
+    mod = 1122615803225854022
