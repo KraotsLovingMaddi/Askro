@@ -2,7 +2,7 @@ import disnake
 from disnake.ext import commands
 
 import utils
-from utils import Level, Context, Stats
+from utils import Level
 
 from main import Askro
 
