@@ -133,7 +133,7 @@ class Levels(commands.Cog):
     async def level_set(
         self,
         inter: disnake.AppCmdInter,
-        level: commands.Range[int, 1, ...],  # From 1 to infinity.
+        level: int = commands.Param(ge=1, le=900),  # From 1 to 900 including those 2 as well.
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
         """Set the level for a member."""
