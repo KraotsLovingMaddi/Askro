@@ -94,6 +94,11 @@ class Askro(commands.Bot):
             self.webhooks['message_logs'] = message_logs
             self.webhooks['welcome_webhook'] = welcome_webhook
 
+        if not hasattr(self, '_presence_changed'):
+            activity = disnake.Activity(type=disnake.ActivityType.watching, name='you date')
+            await self.change_presence(status=disnake.Status.dnd, activity=activity)
+            self._presence_changed = True
+
         print('Bot is online!')
 
     @property

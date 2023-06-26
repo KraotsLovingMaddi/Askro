@@ -12,6 +12,8 @@ from disnake.ext import commands
 import utils
 from utils import Context, TextPage, clean_code, Misc
 
+from jishaku.shell import ShellReader
+
 from main import Askro
 
 
@@ -107,14 +109,14 @@ class Developer(commands.Cog):
         pid = os.getpid()
         os.system(f'kill {pid}')
 
-    # @commands.command()
-    # async def restart(self, ctx: Context):
-    #     """Restarts the bot."""
+    @commands.command()
+    async def restart(self, ctx: Context):
+        """Restarts the bot."""
 
-    #     await ctx.send("*Restarting...*")
-    #     pid = os.getpid()
-    #     os.system('nohup python3 main.py &>> activity.log &')
-    #     os.system(f'kill -9 {pid}')
+        await ctx.send("*Restarting...*")
+        pid = os.getpid()
+        os.system('nohup python3 main.py &>> activity.log &')
+        os.system(f'kill -9 {pid}')
 
     @commands.command(name='toggle')
     async def toggle_cmd(self, ctx: Context, *, command: str):
@@ -244,6 +246,34 @@ class Developer(commands.Cog):
         await ctx.message.delete()
 
         await ctx.send(sentence)
+
+    @commands.group(invoke_without_command=True, case_insensitive=True, hidden=True)
+    async def github(self, ctx: Context):
+        """This does nothing lol."""
+
+        await ctx.send_help('github')
+
+    @github.command(name='pull')
+    async def github_pull(self, ctx: Context):
+        """Pull any updates from the github repository."""
+
+        with ShellReader('git pull') as reader:
+            content = "```" + reader.highlight
+            content += f'\n{reader.ps1} git pull\n\n```'
+
+            em = disnake.Embed(description=content)
+            m = await ctx.send(embed=em)
+
+            async for line in reader:
+                content = content[:-3]
+                content += line + '\n```'
+                em.description = content
+                await m.edit(embed=em)
+        content = content[:-3]
+        content += '\n[status] Git pull complete.\n```'
+        em.description = content
+
+        await m.edit(embed=em)
 
 
 def setup(bot: Askro):
