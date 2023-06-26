@@ -345,7 +345,7 @@ class Levels(commands.Cog):
         await usr_db.commit()
         await inter.send(f'> {self.bot.agree} Set the amount of messages for {member.mention} to `{amount:,}` messages.')
 
-    @messages.command(name='reset')
+    @messages.sub_command(name='reset')
     async def msg_reset(self, inter: disnake.AppCmdInter, member: disnake.Member):
         """Reset the amount of total messages for the member.
 
