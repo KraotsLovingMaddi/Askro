@@ -247,7 +247,7 @@ class Developer(commands.Cog):
 
         await ctx.send(sentence)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True, hidden=True)
+    @commands.group(aliases=('git', 'gh'), invoke_without_command=True, case_insensitive=True, hidden=True)
     async def github(self, ctx: Context):
         """This does nothing lol."""
 
