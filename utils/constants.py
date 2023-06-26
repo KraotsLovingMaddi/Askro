@@ -92,6 +92,8 @@ class StaffRoles(NamedTuple):
     admin = 1122615777707700344
     mod = 1122615803225854022
 
+    all = (owner, admin, mod)
+
 
 class ExtraRoles(NamedTuple):
     unverified = 1121949200414949447
