@@ -11,3 +11,4 @@ from .regex import *
 from .fuzzy import *
 from .views import *
 from .logging import *
+from .pillow import *

@@ -16,7 +16,8 @@ __all__ = (
     'NUMBERS_EMOJI',
     'NUMBERS_TABLE',
     'Channels',
-    'StaffRoles'
+    'StaffRoles',
+    'ExtraRoles'
 )
 
 FIRST_JANUARY_1970 = datetime(1970, 1, 1, 0, 0, 0, 0)
@@ -90,3 +91,10 @@ class StaffRoles(NamedTuple):
     owner = 1116783793605447700
     admin = 1122615777707700344
     mod = 1122615803225854022
+
+
+class ExtraRoles(NamedTuple):
+    unverified = 1121949200414949447
+    booster = 1122887263001509979
+    bot = 1122971950566875227
+    muted = 1122972184600649728
