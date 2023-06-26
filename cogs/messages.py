@@ -130,7 +130,7 @@ class Messages(commands.Cog):
     @commands.Cog.listener('on_message')
     async def check_usernames(self, message: disnake.Message):
         if message.guild and message.guild.id == 1116770122770685982 and not message.author.bot:
-            if message.author.id not in self.bot._owner_id and message.content != '':
+            if message.author.id not in self.bot.owner_ids and message.content != '':
                 await utils.check_username(self.bot, message.author, bad_words=self.bot.bad_words.keys())
 
 
