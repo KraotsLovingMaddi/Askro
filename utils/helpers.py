@@ -33,7 +33,6 @@ __all__ = (
     'try_delete',
     'try_dm',
     'remove_zalgos',
-    'format_name',
     'send_embeds',
     'format_position',
     'TimeConverter',
@@ -562,10 +561,6 @@ async def try_dm(
             "'list[disnake.Member | disnake.User]', 'tuple[disnake.Member | disnake.User]' or "
             f"'set[disnake.Member | disnake.User]' not {user.__class__}"
         )
-
-
-def format_name(user: disnake.Member | disnake.User) -> str:
-    return user.display_name + '#' + user.discriminator
 
 
 async def send_embeds(

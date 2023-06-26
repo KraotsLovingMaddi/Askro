@@ -222,7 +222,7 @@ class Marriages(commands.Cog):
             if member.id != data.married_to and data.married_to != 0:
                 mem = guild.get_member(data.married_to)
                 return await inter.send(
-                    f'{self.bot.denial} You cannot kiss `{utils.format_name(member)}`!! '
+                    f'{self.bot.denial} You cannot kiss `{member.display_name}`!! '
                     f'You can only kiss {mem.mention}'
                 )
 
