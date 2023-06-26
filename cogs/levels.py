@@ -347,10 +347,7 @@ class Levels(commands.Cog):
 
     @messages.sub_command(name='reset')
     async def msg_reset(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Reset the amount of total messages for the member.
-
-        `member` **->** The member for who to reset the total messages count for.
-        """
+        """Reset the amount of total messages for the member."""
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             return await inter.send(
