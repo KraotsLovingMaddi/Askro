@@ -202,7 +202,7 @@ class Levels(commands.Cog):
     async def messages(self, inter):
         pass
 
-    @commands.slash_command(name='view')
+    @messages.sub_command(name='view')
     async def messages_view(
         self,
         inter: disnake.AppCmdInter,
