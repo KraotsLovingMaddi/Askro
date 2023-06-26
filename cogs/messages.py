@@ -117,7 +117,7 @@ class Messages(commands.Cog):
             except asyncio.TimeoutError:
                 await after.clear_reaction('🔁')
             else:
-                usr_data: disnake.Message = self.bot.execs.get[after.author.id]
+                usr_data: disnake.Message = self.bot.execs.get(after.author.id)
                 if usr_data:
                     curr: disnake.Message = usr_data.get(cmd.name)
                     if curr:
