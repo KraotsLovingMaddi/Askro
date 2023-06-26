@@ -360,7 +360,7 @@ class Levels(commands.Cog):
                 ephemeral=True
             )
 
-        view = utils.ConfirmViewInteraction(inter, f"{inter.author.mention} Did not react in time.")
+        view = utils.ConfirmViewInteraction(inter, new_message=f"{inter.author.mention} Did not react in time.")
         await inter.send(
             f"Are you sure you want to reset the total message count for member {member.mention}?",
             view=view
