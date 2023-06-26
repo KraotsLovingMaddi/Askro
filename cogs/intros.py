@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 
 import disnake
@@ -10,6 +11,17 @@ import utils
 from utils import Intros
 
 from main import Askro
+
+
+ALL_COLOURS = [
+    1122943489588613170, 1122943590293839944, 1122943776655155230,
+    1122943868145508526, 1122943930472878100, 1122943995211956375,
+    1122944070579396718, 1122944143019216916, 1122944329758031993,
+    1122945000964096184, 1122945252450381824, 1122945429286420560,
+    1122945621301661800, 1122946182721851564, 1122946618568736819,
+    1122946813985574994, 1122946925268844564, 1122947335916367954,
+    1122947457345662998
+]
 
 
 def create_intro_embed(intro: Intros, member: disnake.Member):
@@ -308,7 +320,8 @@ class IntroHalfTwo(Modal):
         self.intro.hobbies = values['Hobbies']
         self.intro.created_at = datetime.now()
 
-        channel = interaction.bot.get_guild(1116770122770685982).get_channel(utils.Channels.intros)
+        guild = interaction.bot.get_guild(1116770122770685982)
+        channel = guild.get_channel(utils.Channels.intros)
         em = create_intro_embed(self.intro, interaction.author)
 
         m = await channel.send(embed=em)
@@ -319,7 +332,12 @@ class IntroHalfTwo(Modal):
             self.intro.message_id = m.id
             await self.intro.commit()
         else:
-            await interaction.author.edit(roles=[])
+            # I'm only doing this just to increase the randomness even more.
+            for i in range(5):
+                random.shuffle(ALL_COLOURS)
+
+            random_colour = guild.get_role(random.choice(ALL_COLOURS))
+            await interaction.author.edit(roles=[random_colour])
 
             self.intro.message_id = m.id
             await interaction.bot.db.add('intros', self.intro)
