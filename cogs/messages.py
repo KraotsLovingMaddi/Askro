@@ -70,7 +70,7 @@ class Messages(commands.Cog):
                 description=f'Message edited in <#{before.channel.id}>\n\n'
                             f'**Before:**\n```{utils.remove_markdown(before.content)}```\n\n'
                             f'**After:**\n```{utils.remove_markdown(after.content)}```',
-                timestamp=datetime.datetime.utcnow()
+                timestamp=datetime.utcnow()
             )
             em.set_author(name=before.author.display_name, icon_url=f'{before.author.display_avatar}')
             em.set_footer(text=f'User ID: {before.author.id}')
@@ -105,7 +105,7 @@ class Messages(commands.Cog):
             return
 
         if after.content.lower()[1:].startswith(('e', 'eval', 'jsk', 'jishaku')) and \
-            after.author.id == self.bot._owner_id or \
+            after.author.id in self.bot.owner_ids or \
                 after.content.lower()[1:].startswith(('run', 'code')):
             await after.add_reaction('🔁')
             try:
@@ -117,9 +117,11 @@ class Messages(commands.Cog):
             except asyncio.TimeoutError:
                 await after.clear_reaction('🔁')
             else:
-                curr: disnake.Message = self.bot.execs[after.author.id].get(cmd.name)
-                if curr:
-                    await curr.delete()
+                usr_data: disnake.Message = self.bot.execs.get[after.author.id]
+                if usr_data:
+                    curr: disnake.Message = usr_data.get(cmd.name)
+                    if curr:
+                        await curr.delete()
                 await after.clear_reaction('🔁')
                 await cmd.invoke(ctx)
             return
