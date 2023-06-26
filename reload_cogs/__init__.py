@@ -15,27 +15,28 @@ class Cogs(commands.Cog):
     def __init__(self, bot: Askro):
         self.bot = bot
 
+    async def cog_check(self, ctx: Context):
+        if ctx.author.id not in self.bot._owner_ids:
+            raise commands.NotOwner
+        return True
+
     @commands.group(invoke_without_command=True, case_insensitive=True, hidden=True)
-    @commands.is_owner()
     async def load(self, ctx: Context, extension):
         self.bot.load_extension(extension)
         await ctx.reply(f":inbox_tray: `{extension}`")
 
     @commands.group(name='reload', invoke_without_command=True, case_insensitive=True, hidden=True)
-    @commands.is_owner()
     async def _reload(self, ctx: Context, extension):
         self.bot.unload_extension(extension)
         self.bot.load_extension(extension)
         await ctx.reply(f":repeat: `{extension}`")
 
     @commands.group(invoke_without_command=True, case_insensitive=True, hidden=True)
-    @commands.is_owner()
     async def unload(self, ctx: Context, extension):
         self.bot.unload_extension(extension)
         await ctx.reply(f":outbox_tray: `{extension}`")
 
     @_reload.command(aliases=["all"], hidden=True)
-    @commands.is_owner()
     async def reload_all(self, ctx: Context):
         cogs_list = []
         em = disnake.Embed(color=utils.invisible, title="Reloaded the next cogs:")
@@ -62,7 +63,6 @@ class Cogs(commands.Cog):
         await ctx.reply(embed=em)
 
     @load.command(aliases=["all"], hidden=True)
-    @commands.is_owner()
     async def load_all(self, ctx: Context):
         cogs_list = []
         em = disnake.Embed(color=utils.invisible, title="Loaded the next cogs:")
@@ -88,7 +88,6 @@ class Cogs(commands.Cog):
         await ctx.reply(embed=em)
 
     @unload.command(aliases=["all"], hidden=True)
-    @commands.is_owner()
     async def unload_all(self, ctx: Context):
         cogs_list = []
         em = disnake.Embed(color=utils.invisible, title="Unloaded the next cogs:")
