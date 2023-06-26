@@ -284,10 +284,11 @@ class Levels(commands.Cog):
         """Add a certain amount of messages for the member."""
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
-            return await inter.send(
-                f'{self.bot.denial} This command can only be used by admins and above!',
-                ephemeral=True
-        )
+            if inter.author.id not in self.bot.owner_ids:
+                return await inter.send(
+                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    ephemeral=True
+            )
 
         usr_db: Level = await self.bot.db.get('level', member.id)
         if usr_db is None:
@@ -318,10 +319,11 @@ class Levels(commands.Cog):
         """Set the amount of messages for the member."""
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
-            return await inter.send(
-                f'{self.bot.denial} This command can only be used by admins and above!',
-                ephemeral=True
-        )
+            if inter.author.id not in self.bot.owner_ids:
+                return await inter.send(
+                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    ephemeral=True
+            )
 
         usr_db: Level = await self.bot.db.get('level', member.id)
         if usr_db is None:
@@ -348,10 +350,11 @@ class Levels(commands.Cog):
         """Reset the amount of total messages for the member."""
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
-            return await inter.send(
-                f'{self.bot.denial} This command can only be used by admins and above!',
-                ephemeral=True
-        )
+            if inter.author.id not in self.bot.owner_ids:
+                return await inter.send(
+                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    ephemeral=True
+            )
 
         usr_db: Level = await self.bot.db.get('level', member.id)
         if usr_db is None:
