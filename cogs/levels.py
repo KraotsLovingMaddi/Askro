@@ -72,8 +72,6 @@ class Levels(commands.Cog):
     ):
         """View your current level or somebody else's."""
 
-        await inter.response.defer()
-
         if inter.channel.id not in (1116854686759268352, 1117148228941525012, 1116786173621309481):
             if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
                 return await inter.send(
