@@ -64,38 +64,6 @@ class Context(commands.Context):
         else:
             return await super().reply(*args, **kwargs)
 
-    async def check_channel(self) -> bool:
-        if self.channel.id not in (
-            Channels.bots, Channels.bot_commands, Channels.staff_chat
-        ) \
-                and self.author.id not in [1116768380402270239, 1116770319802322954]:
-            await utils.try_delete(self.message, delay=10.0)
-            await self.reply(
-                f'{self.denial} Sorry! This command can only be used in <#{Channels.bots}>',
-                delete_after=10.0
-            )
-            return False
-        return True
-
-    async def check_perms(
-        self,
-        member: disnake.Member,
-        *,
-        reason: str = 'That member is above or equal to you. Cannot do that.'
-    ) -> bool:
-        if self.author.id in [1116768380402270239, 1116770319802322954]:
-            return True
-        elif member.id in [1116768380402270239, 1116770319802322954]:
-            await self.reply(
-                f'{self.denial} That member is above or equal to you. '
-                'Cannot do that. (above in this case you sub bottom <:kek:1102711414927405157>)'
-            )
-            return False
-        elif self.author.top_role <= member.top_role:
-            await self.reply(f'{self.denial} {reason}')
-            return False
-        return True
-
     async def reraise(self, error):
         if isinstance(error, commands.NotOwner):
             await self.reply(f'{self.denial} You do not own this bot, this is an owner only command.', delete_after=8)
