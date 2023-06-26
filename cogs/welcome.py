@@ -83,12 +83,12 @@ class Welcome(commands.Cog):
         guild = self.bot.get_guild(1116770122770685982)
         if member.bot:
             bot_role = guild.get_role(utils.ExtraRoles.bot)
-            await member.add_roles([bot_role], reason='Bot Account.')
+            await member.add_roles(bot_role, reason='Bot Account.')
             return
 
         await utils.check_username(self.bot, member=member, bad_words=self.bot.bad_words.keys())
         unverified_role = guild.get_role(utils.ExtraRoles.unverified)
-        await member.add_roles([unverified_role])
+        await member.add_roles(unverified_role)
 
         member_count = len([m for m in guild.members if not m.bot])
         file = await utils.create_welcome_card(member, member_count)
