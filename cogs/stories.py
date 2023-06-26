@@ -113,6 +113,11 @@ class Stories(commands.Cog):
         inter: disnake.AppCmdInter,
         story_name: str
     ):
+        """View a story."""
+
+        if inter.author.id not in self.bot.owner_ids:
+            return await inter.send('**[CURRENTLY UNDER DEVELOPMENT]**', ephemeral=True)
+
         story: Story = await self.bot.db.find_one('stories', {'name': story_name})
         if story is None:
             return await inter.send(f'No story named `{story_name}` found.', ephemeral=True)
@@ -154,6 +159,11 @@ class Stories(commands.Cog):
         self,
         inter: disnake.AppCmdInter
     ):
+        """Create a story."""
+
+        if inter.author.id not in self.bot.owner_ids:
+            return await inter.send('**[CURRENTLY UNDER DEVELOPMENT]**', ephemeral=True)
+
         await inter.response.send_modal(StoryCreateModal())
 
 def setup(bot: Askro):
