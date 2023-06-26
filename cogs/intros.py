@@ -524,7 +524,7 @@ class Intro_(commands.Cog, name='Intros'):
         """Unverifies a member if they have a troll or malicious intro."""
 
         if inter.author.id not in self.bot.owner_ids:
-            if not any(r for r in (utils.StaffRoles.owner,) if r in (role.id for role in inter.author.roles)):
+            if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
                 return await inter.send(
                     f'{self.bot.denial} You are not allowed to use this command.',
                     ephemeral=True
