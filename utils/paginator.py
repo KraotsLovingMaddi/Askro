@@ -124,7 +124,7 @@ class RoboPages(disnake.ui.View):
             pass
 
     async def interaction_check(self, interaction: MessageInteraction) -> bool:
-        if interaction.user and interaction.user.id in (self.ctx.bot._owner_id, self.ctx.author.id):
+        if interaction.user and interaction.user.id in (self.ctx.bot.owner_ids, self.ctx.author.id):
             return True
         await interaction.response.send_message(
             'This pagination menu cannot be controlled by you, sorry!',
@@ -147,10 +147,6 @@ class RoboPages(disnake.ui.View):
         await self.ctx.bot.inter_reraise(self.ctx.bot, interaction, item, error)
 
     async def start(self, *, ref: bool = False) -> None:
-        if self.check_embeds and not self.ctx.channel.permissions_for(self.ctx.me).embed_links:
-            await self.ctx.send('Bot does not have embed links permission in this channel.')
-            return
-
         await self.source._prepare_once()
         page = await self.source.get_page(0)
         kwargs = await self._get_kwargs_from_page(page)
