@@ -40,6 +40,9 @@ class Askro(commands.Bot):
         self.socket_events = Counter()
         self.execs = {}
 
+        self.bad_words = {}
+        self.loop.create_task(self.add_bad_words())
+
         self.webhooks = {}
 
         self.load_extension('jishaku')
@@ -200,6 +203,12 @@ class Askro(commands.Bot):
     @property
     def denial(self) -> str:
         return f'>>> {self.disagree}'
+
+    async def add_bad_words(self):
+        data: utils.Misc = await utils.Misc.get()
+        if data and data.bad_words:
+            for word, added_by in data.bad_words.items():
+                self.bad_words[word] = added_by
 
 
 Askro().run(TOKEN)

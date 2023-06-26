@@ -14,6 +14,7 @@ class Misc(Document, GetDoc):
     id = IntField(attribute='_id', default=1116768380402270239)
     disabled_commands = ListField(StrField(), default=[])
     min_account_age = IntField(default=7)
+    bad_words = DictField(StrField(), IntField())
 
     class Meta:
         collection_name = 'Miscellaneous'
