@@ -65,7 +65,7 @@ async def create_rank_card(
 
     _user = await utils.run_in_executor(Image.new)("RGBA", (500, 50), TRANSPARENT)
     draw = await utils.run_in_executor(ImageDraw.Draw)(_user)
-    txt = str(user.display_name) + '#' + str(user.discriminator)
+    txt = user.display_name
     font = await get_font(txt, _user)
     await utils.run_in_executor(draw.text)((0, 0), txt, font=font)
 
