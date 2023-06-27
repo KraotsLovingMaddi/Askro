@@ -263,8 +263,11 @@ class Moderation(commands.Cog):
             title=f'[UNMUTE]',
             fields=[
                 ('Member', f'{member.display_name} (`{member.id}`)'),
-                ('Mute Duration', f'`{mute_duration}`'),
+                ('Original Reason', entry.reason)
+                ('Original Duration', f'`{mute_duration}`'),
+                ('Original Expiration Date', f'`{expiration_date}`'),
                 ('Remaining', f'`{remaining}`'),
+                ('Originally Muted By', f'`{_muted_by.mention}` (`{_muted_by.id}`)'),
                 ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
                 ('At', utils.format_dt(datetime.now(), 'F')),
             ]
