@@ -270,7 +270,7 @@ class Moderation(commands.Cog):
                 ('Member', f'{member.display_name} (`{member.id}`)'),
                 ('Original Reason', entry.reason),
                 ('Original Duration', f'`{mute_duration}`'),
-                ('Original Expiration Date', f'`{expiration_date}`'),
+                ('Original Expiration Date', expiration_date),
                 ('Remaining', f'`{remaining}`'),
                 ('Originally Muted By', f'`{_muted_by.mention}` (`{_muted_by.id}`)'),
                 ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
