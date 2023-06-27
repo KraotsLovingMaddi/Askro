@@ -26,7 +26,7 @@ class Moderation(commands.Cog):
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
                 await inter.send(
-                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    f'{self.bot.denial} This command can only be used by staff members!',
                     ephemeral=True
             )
                 return False
@@ -359,6 +359,62 @@ class Moderation(commands.Cog):
     @check_streaks.before_loop
     async def streaks_wait_until_ready(self):
         await self.bot.wait_until_ready()
+
+    @commands.slash_command(name='ban')
+    async def ban(self, inter: disnake.AppCmdInter, member: disnake.Member, reason: str):
+        """Ban a member."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
+            if inter.author.id not in self.bot.owner_ids:
+                await inter.send(
+                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    ephemeral=True
+                )
+
+        if member.top_role >= inter.author.top_role and inter.author.id not in self.bot.owner_ids:
+            return await inter.send(
+                f'{self.bot.denial} You cannot ban someone that is of higher or equal role to you.',
+                ephemeral=True
+            )
+
+        staff_rank = 'Apparently not a staff member, please contact the owner about this issue.'
+        _author_roles_ids = [r.id for r in inter.author.roles]
+        if utils.StaffRoles.owner in _author_roles_ids or inter.author.id in self.bot.owner_ids:
+            staff_rank = 'Owner'
+        elif utils.StaffRoles.admin in _author_roles_ids:
+            staff_rank = 'Admin'
+
+        em = disnake.Embed()
+        em.title = f'You have been banned in `{inter.guild.name}`'
+        em.add_field(
+            'Banned By',
+            inter.author.display_name + f' **{staff_rank}**',
+            inline=False
+        )
+        em.add_field(
+            'Reason',
+            reason,
+            inline=False
+        )
+
+        await utils.try_dm(member, embed=em)
+        await inter.send(
+            f'> 👌 {member.mention} has been banned.'
+        )
+
+        await utils.log(
+            self.bot.webhooks['mod_logs'],
+            title=f'[BAN]',
+            fields=[
+                ('Member', f'{member.display_name} (`{member.id}`)'),
+                ('Reason', reason),
+                ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
+                ('At', utils.format_dt(datetime.now(), 'F')),
+            ]
+        )
 
 
 def setup(bot: Askro):
