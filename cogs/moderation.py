@@ -64,6 +64,8 @@ class Moderation(commands.Cog):
                 f'{self.bot.denial} You cannot mute someone that is of higher or equal role to you.',
                 ephemeral=True
             )
+        elif member.bot:
+            return await inter.send(f'{self.bot.denial} Bots can\'t be muted.', ephemeral=True)
 
         had_entry = True
         entry: utils.Mute = await self.bot.db.get('mutes', member.id)
@@ -158,7 +160,10 @@ class Moderation(commands.Cog):
 
         if await self.check_perms(inter) is False:
             return
-        
+
+        if member.bot:
+            return await inter.send(f'{self.bot.denial} Bots can\'t be muted.', ephemeral=True)
+
         entry: utils.Mute = await self.bot.db.get('mutes', member.id)
         if entry is None or entry.is_muted is False:
             return await inter.send(f'{self.bot.denial} That member is not muted!', ephemeral=True)
