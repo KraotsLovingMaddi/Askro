@@ -47,6 +47,7 @@ class Moderation(commands.Cog):
             return
 
         try:
+            duration = duration.replace(' ', '')  # This is what caused the TypeError
             time_and_reason = await utils.UserFriendlyTime().convert(duration + ' ' + reason)
             mute_duration = utils.human_timedelta(time_and_reason.dt, suffix=False)
             expiration_date = utils.format_dt(time_and_reason.dt, 'F')
