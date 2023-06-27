@@ -467,6 +467,27 @@ class Moderation(commands.Cog):
             ]
         )
 
+    @commands.slash_command(name='purge')
+    async def purge(self, inter: disnake.AppCmdInter, amount: int = commands.Param(ge=1)):
+        """Purge an amount of messages from the current channel."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        messages = await inter.channel.purge(limit=amount)
+        await inter.send(f'> 👌 Purged `{len(messages):,}` messages.')
+
+        await utils.log(
+            self.bot.webhooks['mod_logs'],
+            title='[CHAT PURGE]',
+            fields=[
+                ('Channel', inter.channel.mention),
+                ('Amount', f'`{utils.plural(len(messages)):message}`'),
+                ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
+                ('At', utils.format_dt(datetime.now(), 'F')),
+            ]
+        )
+
 
 def setup(bot: Askro):
     bot.add_cog(Moderation(bot))
