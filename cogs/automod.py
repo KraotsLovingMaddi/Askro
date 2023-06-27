@@ -32,7 +32,7 @@ class AutoMod(commands.Cog):
             3, 30.0, commands.BucketType.user)  # Checks for the amount of emojis in a message in a message (3msg per 30s)
 
     async def get_mute_time(self, user_id) -> str:
-        data: utils.Mutes = await self.bot.db.get('mute', user_id)
+        data: utils.Mute = await self.bot.db.get('mute', user_id)
         if data is None:
             streak = 1
         else:
@@ -66,9 +66,9 @@ class AutoMod(commands.Cog):
         role = guild.get_role(ExtraRoles.muted)
 
         data_was_none = False
-        data: utils.Mutes = await self.bot.db.get('mutes', user.id)
+        data: utils.Mute = await self.bot.db.get('mutes', user.id)
         if data is None:
-            data: utils.Mutes = utils.Mutes(
+            data: utils.Mute = utils.Mute(
                 id=user.id,
                 muted_by=self.bot.user.id,
                 muted_until=_data.dt,
