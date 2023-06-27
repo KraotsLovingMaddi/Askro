@@ -85,54 +85,38 @@ class FutureTime(Time):
             raise commands.BadArgument('this time is in the past')
 
 
-class UserFriendlyTime(commands.Converter):
+class UserFriendlyTime:
     """That way quotes aren't absolutely necessary."""
-    def __init__(self, converter=None, *, default=None):
-        if isinstance(converter, type) and issubclass(converter, commands.Converter):
-            converter = converter()
 
-        if converter is not None and not isinstance(converter, commands.Converter):
-            raise TypeError('commands.Converter subclass necessary.')
-
-        self.converter = converter
-        self.default = default
-
-    async def check_constraints(self, ctx, now, remaining):
+    async def check_constraints(self, now, remaining):
         if self.dt < now:
             raise commands.BadArgument('This time is in the past.')
 
         if not remaining:
-            if self.default is None:
-                raise commands.BadArgument('Missing argument after the time.')
-            remaining = self.default
+            remaining = None
 
-        if self.converter is not None:
-            self.arg = await self.converter.convert(ctx, remaining)
-        else:
-            self.arg = remaining
+        self.arg = remaining
         return self
 
     def copy(self):
         cls = self.__class__
         obj = cls.__new__(cls)
-        obj.converter = self.converter
-        obj.default = self.default
         return obj
 
-    async def convert(self, ctx, argument):
+    async def convert(self, argument):
         # Create a copy of ourselves to prevent race conditions from two
         # events modifying the same instance of a converter
         result = self.copy()
         calendar = HumanTime.calendar
         regex = ShortTime.compiled
-        now = ctx.message.created_at
+        now = datetime.datetime.utcnow()
 
         match = regex.match(argument)
         if match is not None and match.group(0):
             data = {k: int(v) for k, v in match.groupdict(default=0).items()}
             remaining = argument[match.end():].strip()
             result.dt = now + relativedelta(**data)
-            return await result.check_constraints(ctx, now, remaining)
+            return await result.check_constraints(now, remaining)
 
         # apparently nlp does not like "from now"
         # it likes "from x" in other cases though so let me handle the 'now' case
@@ -189,7 +173,7 @@ class UserFriendlyTime(commands.Converter):
         elif len(argument) == end:
             remaining = argument[:begin].strip()
 
-        return await result.check_constraints(ctx, now, remaining)
+        return await result.check_constraints(now, remaining)
 
 
 def human_timedelta(dt, *, source=None, accuracy=3, brief=False, suffix=True):

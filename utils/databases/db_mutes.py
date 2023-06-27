@@ -13,8 +13,6 @@ class Mute(Document, GetDoc):
     muted_by = IntField(required=True)
     muted_until = DateTimeField(required=True)
     reason = StrField(required=True)
-    duration = StrField(required=True)
-    jump_url = StrField(required=True)
 
     streak = IntField(default=1)
     streak_expire_date = DateTimeField()
@@ -24,7 +22,6 @@ class Mute(Document, GetDoc):
     is_owner = BoolField(default=False)
     is_admin = BoolField(default=False)
     is_mod = BoolField(default=False)
-    filter = BoolField(default=False)
 
     class Meta:
         collection_name = 'Mutes'
