@@ -149,7 +149,7 @@ class Moderation(commands.Cog):
                 ('Reason', reason),
                 ('Duration', f'`{mute_duration}`'),
                 ('Expires At', expiration_date),
-                ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
+                ('By', inter.author.display_name + f' (**{staff_rank}**)'),
                 ('At', utils.format_dt(datetime.now(), 'F')),
             ]
         )
@@ -272,7 +272,7 @@ class Moderation(commands.Cog):
                 ('Original Duration', f'`{mute_duration}`'),
                 ('Original Expiration Date', expiration_date),
                 ('Remaining', f'`{remaining}`'),
-                ('Originally Muted By', f'{_muted_by.mention} (`{_muted_by.id}`)'),
+                ('Originally Muted By', muted_by),
                 ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
                 ('At', utils.format_dt(datetime.now(), 'F')),
             ]

@@ -94,6 +94,90 @@ class Welcome(commands.Cog):
         file = await utils.create_welcome_card(member, member_count)
         self.files[member.id] = file
 
+        mute: utils.Mute = await self.bot.db.get('mute', member.id)
+        if mute is not None and mute.is_muted is True:
+            if mute.permanent is True:
+                mute_duration = 'PERMANENT'
+                expiration_date = 'PERMANENT'
+                remaining = 'PERMANENT'
+            else:
+                mute_duration = mute.duration
+                expiration_date = utils.format_dt(mute.muted_until, 'F')
+                remaining = utils.human_timedelta(mute.muted_until, suffix=False)
+
+            role = guild.get_role(utils.ExtraRoles.muted)
+            _muted_by = guild.get_member(mute.muted_by)
+            await member.add_roles(role, reason=f'[MUTE EVASION] user joined but was still muted.')
+
+            if mute.filter is True:
+                muted_by = 'Automod'
+            else:
+                muted_by_staff_rank = 'Apparently not a staff member, please contact the owner about this issue.'
+                _muted_by_roles_ids = [r.id for r in _muted_by.roles]
+                if utils.StaffRoles.owner in _muted_by_roles_ids or _muted_by.id in self.bot.owner_ids:
+                    muted_by_staff_rank = 'Owner'
+                elif utils.StaffRoles.admin in _muted_by_roles_ids:
+                    muted_by_staff_rank = 'Admin'
+                elif utils.StaffRoles.mod in _muted_by_roles_ids:
+                    muted_by_staff_rank = 'Moderator'
+                muted_by = f'{_muted_by.display_name} (**{muted_by_staff_rank}**)'
+
+            em = disnake.Embed()
+            em.title = f'You have been muted in `{guild.name}`'
+            em.add_field(
+                'Muted By',
+                'Automod',
+                inline=False
+            )
+            em.add_field(
+                'Reason',
+                'Mute Evasion',
+                inline=False
+            )
+            em.add_field(
+                'Original Reason',
+                entry.reason,
+                inline=False
+            )
+            em.add_field(
+                'Original Duration',
+                mute_duration,
+                inline=False
+            )
+            em.add_field(
+                'Original Expiration date',
+                expiration_date,
+                inline=False
+            )
+            em.add_field(
+                'Time Remaining',
+                remaining,
+                inline=False
+            )
+            em.add_field(
+                'Originally Muted By',
+                muted_by,
+                inline=False
+            )
+            em.color = utils.red
+
+            await utils.try_dm(member, embed=em)
+
+            await utils.log(
+                self.bot.webhooks['mod_logs'],
+                title=f'[UNMUTE]',
+                fields=[
+                    ('Member', f'{member.display_name} (`{member.id}`)'),
+                    ('Original Reason', entry.reason),
+                    ('Original Duration', f'`{mute_duration}`'),
+                    ('Original Expiration Date', expiration_date),
+                    ('Remaining', f'`{remaining}`'),
+                    ('Originally Muted By', muted_by),
+                    ('By', 'Automod'),
+                    ('At', utils.format_dt(datetime.now(), 'F')),
+                ]
+            )
+
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
         if member.guild.id != 1116770122770685982:
