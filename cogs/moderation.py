@@ -268,7 +268,7 @@ class Moderation(commands.Cog):
             title=f'[UNMUTE]',
             fields=[
                 ('Member', f'{member.display_name} (`{member.id}`)'),
-                ('Original Reason', entry.reason)
+                ('Original Reason', entry.reason),
                 ('Original Duration', f'`{mute_duration}`'),
                 ('Original Expiration Date', f'`{expiration_date}`'),
                 ('Remaining', f'`{remaining}`'),
