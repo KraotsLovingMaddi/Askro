@@ -337,7 +337,8 @@ class IntroHalfTwo(Modal):
                 random.shuffle(ALL_COLOURS)
 
             random_colour = guild.get_role(random.choice(ALL_COLOURS))
-            await interaction.author.edit(roles=[random_colour])
+            new_roles = [r for r in interaction.author.roles if r.id != utils.ExtraRoles.unverified] + [random_colour]
+            await interaction.author.edit(roles=new_roles)
 
             self.intro.message_id = m.id
             await interaction.bot.db.add('intros', self.intro)
