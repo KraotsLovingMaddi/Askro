@@ -152,7 +152,7 @@ class Moderation(commands.Cog):
             ]
         )
 
-    @tasks.loop(seconds=15.0)
+    @tasks.loop(seconds=5.0)
     async def check_mutes(self):
         mutes: list[utils.Mutes] = await self.bot.db.find_sorted('mutes', 'muted_until', 1, {'is_muted': True})
         for mute in mutes[:15]:
@@ -207,7 +207,7 @@ class Moderation(commands.Cog):
     async def mutes_wait_until_ready(self):
         await self.bot.wait_until_ready()
 
-    @tasks.loop(seconds=15.0)
+    @tasks.loop(seconds=5.0)
     async def check_streaks(self):
         mutes: list[utils.Mutes] = await self.bot.db.find_sorted('mutes', 'streak_expire_date', 1, {'is_muted': False})
         for mute in mutes[:10]:
