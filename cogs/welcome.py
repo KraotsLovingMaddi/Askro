@@ -165,9 +165,10 @@ class Welcome(commands.Cog):
 
             await utils.log(
                 self.bot.webhooks['mod_logs'],
-                title=f'[UNMUTE]',
+                title=f'[MUTE]',
                 fields=[
                     ('Member', f'{member.display_name} (`{member.id}`)'),
+                    ('Reason', 'Mute Evasion'),
                     ('Original Reason', mute.reason),
                     ('Original Duration', f'`{mute_duration}`'),
                     ('Original Expiration Date', expiration_date),
