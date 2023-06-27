@@ -208,7 +208,7 @@ class Moderation(commands.Cog):
                 muted_by_staff_rank = 'Admin'
             elif utils.StaffRoles.mod in _muted_by_roles_ids:
                 muted_by_staff_rank = 'Moderator'
-            muted_by = f'{_muted_by.display_name} (`{muted_by_staff_rank}`)'
+            muted_by = f'{_muted_by.display_name} (**{muted_by_staff_rank}**)'
 
         if entry.permanent is True:
             mute_duration = 'PERMANENT'
