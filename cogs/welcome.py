@@ -136,7 +136,7 @@ class Welcome(commands.Cog):
             )
             em.add_field(
                 'Original Reason',
-                entry.reason,
+                mute.reason,
                 inline=False
             )
             em.add_field(
@@ -168,7 +168,7 @@ class Welcome(commands.Cog):
                 title=f'[UNMUTE]',
                 fields=[
                     ('Member', f'{member.display_name} (`{member.id}`)'),
-                    ('Original Reason', entry.reason),
+                    ('Original Reason', mute.reason),
                     ('Original Duration', f'`{mute_duration}`'),
                     ('Original Expiration Date', expiration_date),
                     ('Remaining', f'`{remaining}`'),
