@@ -216,7 +216,7 @@ class Moderation(commands.Cog):
             remaining = 'PERMANENT'
         else:
             mute_duration = entry.duration
-            expiration_date = utils.format_dt(entry.dt, 'F')
+            expiration_date = utils.format_dt(entry.muted_until, 'F')
             remaining = utils.human_timedelta(entry.muted_until, suffix=False)
 
         em = disnake.Embed()
