@@ -2,7 +2,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import disnake
-from disnake.ext import commands
+from disnake.ext import commands, tasks
 
 import utils
 
@@ -13,6 +13,9 @@ class Moderation(commands.Cog):
     """Staff related commands."""
     def __init__(self, bot: Askro):
         self.bot = bot
+
+        self.check_mutes.start()
+        self.check_streaks.start()
 
     async def check_perms(self, inter: disnake.AppCmdInter) -> bool:
         """
@@ -147,6 +150,88 @@ class Moderation(commands.Cog):
                 ('At', utils.format_dt(datetime.now(), 'F')),
             ]
         )
+
+    @tasks.loop(seconds=15.0)
+    async def check_mutes(self):
+        mutes: list[utils.Mutes] = await self.bot.db.find_sorted('mutes', 'muted_until', 1, {'is_muted': True})
+        for mute in mutes[:15]:
+            if datetime.now(mute.muted_until.tzinfo) >= mute.muted_until:
+                guild = self.bot.get_guild(1116770122770685982)
+                member = guild.get_member(mute.id)
+                _mem = f'**[LEFT]** (`{mute.id}`)'
+
+                if member:
+                    _mem = f'{member.display_name} (`{member.id}`)'
+                    new_roles = [role for role in member.roles if role.id != utils.ExtraRoles.muted]
+                    if mute.is_owner is True:
+                        owner_role = guild.get_role(utils.StaffRoles.owner)  # Check for owner
+                        new_roles += [owner_role]
+                    elif mute.is_admin is True:
+                        admin_role = guild.get_role(utils.StaffRoles.admin)  # Check for admin
+                        new_roles += [admin_role]
+                    elif mute.is_mod is True:
+                        mod_role = guild.get_role(utils.StaffRoles.mod)  # Check for mod
+                        new_roles += [mod_role]
+                    await member.edit(roles=new_roles, reason=f'[UNMUTE] Mute Expired.')
+                    await utils.try_dm(
+                        member,
+                        f'Hello, your mute in `{guild.name}` has expired. You have been unmuted.'
+                    )
+
+                if mute.filter is True:
+                    mute.is_muted = False
+                    mute.streak_expire_date = datetime.now() + relativedelta(days=21)
+                    await mute.commit()
+                else:
+                    if mute.streak == 0:
+                        await self.bot.db.delete('mutes', {'_id': mute.id})
+                    else:
+                        mute.is_muted = False
+                        await mute.commit()
+
+                mem = guild.get_member(mute.muted_by)
+                await utils.log(
+                    self.bot.webhooks['mod_logs'],
+                    title=f'[MUTE EXPIRED]',
+                    fields=[
+                        ('Member', _mem),
+                        ('Reason', mute.reason),
+                        (f'Mute Duration', f'`{mute.duration}`'),
+                        ('By', mem.mention),
+                        ('At', utils.format_dt(datetime.now(), 'F')),
+                    ]
+                )
+
+    @check_mutes.before_loop
+    async def mutes_wait_until_ready(self):
+        await self.bot.wait_until_ready()
+
+    @tasks.loop(seconds=15.0)
+    async def check_streaks(self):
+        mutes: list[utils.Mutes] = await self.bot.db.find_sorted('mutes', 'streak_expire_date', 1, {'is_muted': False})
+        for mute in mutes[:10]:
+            if datetime.now() >= mute.streak_expire_date:
+                await self.bot.db.delete('mutes', {'_id': mute.pk})
+
+                guild = self.bot.get_guild(1116770122770685982)
+                usr = guild.get_member(mute.id)
+                if usr:
+                    mem = f'{usr.display_name} (`{usr.id}`)'
+                else:
+                    mem = f'**[LEFT]** (`{mute.id}`)'
+
+                await utils.log(
+                    self.bot.webhooks['mod_logs'],
+                    title='[STREAK RESET]',
+                    fields=[
+                        ('User', mem),
+                        ('At', utils.format_dt(datetime.now(), 'F')),
+                    ]
+                )
+
+    @check_streaks.before_loop
+    async def streaks_wait_until_ready(self):
+        await self.bot.wait_until_ready()
 
 
 def setup(bot: Askro):

@@ -22,6 +22,7 @@ class Mute(Document, GetDoc):
     is_owner = BoolField(default=False)
     is_admin = BoolField(default=False)
     is_mod = BoolField(default=False)
+    filter = BoolField(default=False)
 
     class Meta:
         collection_name = 'Mutes'
