@@ -130,6 +130,7 @@ class Moderation(commands.Cog):
         )
 
         entry.muted_until = time_and_reason.dt
+        entry.duration = mute_duration
         entry.reason = reason
         entry.is_muted = True
 
@@ -192,11 +193,11 @@ class Moderation(commands.Cog):
                 mem = guild.get_member(mute.muted_by)
                 await utils.log(
                     self.bot.webhooks['mod_logs'],
-                    title=f'[MUTE EXPIRED]',
+                    title='[MUTE EXPIRED]',
                     fields=[
                         ('Member', _mem),
                         ('Reason', mute.reason),
-                        (f'Mute Duration', f'`{mute.duration}`'),
+                        ('Mute Duration', f'`{mute.duration}`'),
                         ('By', mem.mention),
                         ('At', utils.format_dt(datetime.now(), 'F')),
                     ]

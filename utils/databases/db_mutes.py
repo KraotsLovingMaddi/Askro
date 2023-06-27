@@ -13,6 +13,7 @@ class Mute(Document, GetDoc):
     muted_by = IntField(required=True)
     muted_until = DateTimeField(required=True)
     reason = StrField(required=True)
+    duration = StrField(required=True)
 
     streak = IntField(default=0)
     streak_expire_date = DateTimeField()
