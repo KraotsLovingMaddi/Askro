@@ -416,6 +416,57 @@ class Moderation(commands.Cog):
             ]
         )
 
+    @commands.slash_command(name='kick')
+    async def kick(self, inter: disnake.AppCmdInter, member: disnake.Member, reason: str):
+        """Kick a member."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        if member.top_role >= inter.author.top_role and inter.author.id not in self.bot.owner_ids:
+            return await inter.send(
+                f'{self.bot.denial} You cannot kick someone that is of higher or equal role to you.',
+                ephemeral=True
+            )
+
+        staff_rank = 'Apparently not a staff member, please contact the owner about this issue.'
+        _author_roles_ids = [r.id for r in inter.author.roles]
+        if utils.StaffRoles.owner in _author_roles_ids or inter.author.id in self.bot.owner_ids:
+            staff_rank = 'Owner'
+        elif utils.StaffRoles.admin in _author_roles_ids:
+            staff_rank = 'Admin'
+        elif utils.StaffRoles.mod in _author_roles_ids:
+            staff_rank = 'Moderator'
+
+        em = disnake.Embed()
+        em.title = f'You have been kicked in `{inter.guild.name}`'
+        em.add_field(
+            'Kicked By',
+            inter.author.display_name + f' **{staff_rank}**',
+            inline=False
+        )
+        em.add_field(
+            'Reason',
+            reason,
+            inline=False
+        )
+
+        await utils.try_dm(member, embed=em)
+        await inter.send(
+            f'> 👌 {member.mention} has been kicked.'
+        )
+
+        await utils.log(
+            self.bot.webhooks['mod_logs'],
+            title=f'[KICK]',
+            fields=[
+                ('Member', f'{member.display_name} (`{member.id}`)'),
+                ('Reason', reason),
+                ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
+                ('At', utils.format_dt(datetime.now(), 'F')),
+            ]
+        )
+
 
 def setup(bot: Askro):
     bot.add_cog(Moderation(bot))
