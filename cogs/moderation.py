@@ -98,7 +98,7 @@ class Moderation(commands.Cog):
         guild = self.bot.get_guild(1116770122770685982)
         muted_role = guild.get_role(utils.ExtraRoles.muted)
         new_roles = [r for r in member.roles if r.id not in utils.StaffRoles.all] + [muted_role]
-        await member.edit(roles=new_roles, reason=f'Muted by {inter.author.display_name}')
+        await member.edit(roles=new_roles, reason=f'Muted by: {inter.author.display_name} ({inter.author.id})')
 
         em = disnake.Embed()
         em.title = f'You have been muted in `{guild.name}`'
@@ -152,25 +152,143 @@ class Moderation(commands.Cog):
             ]
         )
 
+    @commands.slash_command(name='unmute')
+    async def unmute(self, inter: disnake.AppCmdInter, member: disnake.Member):
+        """Unmutes a member."""
+
+        if await self.check_perms(inter) is False:
+            return
+        
+        entry: utils.Mute = await self.bot.db.get('mutes', member.id)
+        if entry is None or entry.is_muted is False:
+            return await inter.send(f'{self.bot.denial} That member is not muted!', ephemeral=True)
+
+        guild = self.bot.get_guild(1116770122770685982)
+        _muted_by = guild.get_member(entry.muted_by)
+        new_roles = [r for r in member.roles if r.id != utils.ExtraRoles.muted]
+        if entry.is_owner is True:
+            new_roles += [guild.get_role(utils.StaffRoles.owner)]
+        if entry.is_admin is True:
+            new_roles += [guild.get_role(utils.StaffRoles.admin)]
+        if entry.is_mod is True:
+            new_roles += [guild.get_role(utils.StaffRoles.mod)]
+
+        await member.edit(roles=new_roles, reason=f'Unmuted by: {inter.author.display_name} ({inter.author.id})')
+
+        staff_rank = 'Apparently not a staff member, please contact the owner about this issue.'
+        _author_roles_ids = [r.id for r in inter.author.roles]
+        if utils.StaffRoles.owner in _author_roles_ids or inter.author.id in self.bot.owner_ids:
+            staff_rank = 'Owner'
+        elif utils.StaffRoles.admin in _author_roles_ids:
+            staff_rank = 'Admin'
+        elif utils.StaffRoles.mod in _author_roles_ids:
+            staff_rank = 'Moderator'
+
+        if entry.filter is True:
+            if entry.streak == 7:
+                await self.bot.db.delete('mutes', {'_id': entry.pk})
+            else:
+                entry.streak_expire_date = datetime.now() + relativedelta(days=21)
+                entry.is_muted = False
+                await entry.commit()
+
+            muted_by = 'Automod'
+        else:
+            if entry.streak == 0:
+                await self.bot.db.delete('mutes', {'_id': entry.pk})
+            else:
+                entry.is_muted = False
+                await entry.commit()
+
+            muted_by_staff_rank = 'Apparently not a staff member, please contact the owner about this issue.'
+            _muted_by_roles_ids = [r.id for r in _muted_by.roles]
+            if utils.StaffRoles.owner in _muted_by_roles_ids or _muted_by.id in self.bot.owner_ids:
+                muted_by_staff_rank = 'Owner'
+            elif utils.StaffRoles.admin in _muted_by_roles_ids:
+                muted_by_staff_rank = 'Admin'
+            elif utils.StaffRoles.mod in _muted_by_roles_ids:
+                muted_by_staff_rank = 'Moderator'
+            muted_by = f'{_muted_by.display_name} (`{muted_by_staff_rank}`)'
+
+        if entry.permanent is True:
+            mute_duration = 'PERMANENT'
+            expiration_date = 'PERMANENT'
+            remaining = 'PERMANENT'
+        else:
+            mute_duration = entry.duration
+            expiration_date = utils.format_dt(entry.dt, 'F')
+            remaining = utils.human_timedelta(entry.muted_until, suffix=False)
+
+        em = disnake.Embed()
+        em.title = f'You have been unmuted in `{guild.name}`'
+        em.add_field(
+            'Unmuted By',
+            inter.author.display_name + f' (**{staff_rank}**)',
+            inline=False
+        )
+        em.add_field(
+            'Original Reason',
+            entry.reason,
+            inline=False
+        )
+        em.add_field(
+            'Original Duration',
+            mute_duration,
+            inline=False
+        )
+        em.add_field(
+            'Original Expiration date',
+            expiration_date,
+            inline=False
+        )
+        em.add_field(
+            'Time Remaining',
+            remaining,
+            inline=False
+        )
+        em.add_field(
+            'Originally Muted By',
+            muted_by,
+            inline=False
+        )
+        em.color = utils.green
+
+        await utils.try_dm(member, embed=em)
+        await inter.send(
+            f'> 👌 {member.mention} has been unmuted.'
+        )
+
+        await utils.log(
+            self.bot.webhooks['mod_logs'],
+            title=f'[UNMUTE]',
+            fields=[
+                ('Member', f'{member.display_name} (`{member.id}`)'),
+                ('Mute Duration', f'`{mute_duration}`'),
+                ('Remaining', f'`{remaining}`'),
+                ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
+                ('At', utils.format_dt(datetime.now(), 'F')),
+            ]
+        )
+
     @tasks.loop(seconds=5.0)
     async def check_mutes(self):
-        mutes: list[utils.Mutes] = await self.bot.db.find_sorted('mutes', 'muted_until', 1, {'is_muted': True})
-        for mute in mutes[:15]:
-            if datetime.now(mute.muted_until.tzinfo) >= mute.muted_until:
+        entries: list[utils.Mute] = await self.bot.db.find_sorted('mutes', 'muted_until', 1, {'is_muted': True})
+        for entry in entries[:15]:
+            if datetime.now(entry.muted_until.tzinfo) >= entry.muted_until:
                 guild = self.bot.get_guild(1116770122770685982)
-                member = guild.get_member(mute.id)
-                _mem = f'**[LEFT]** (`{mute.id}`)'
+                member = guild.get_member(entry.id)
+                _mem = f'**[LEFT]** (`{entry.id}`)'
 
                 if member:
                     _mem = f'{member.display_name} (`{member.id}`)'
                     new_roles = [role for role in member.roles if role.id != utils.ExtraRoles.muted]
-                    if mute.is_owner is True:
+                    if entry.is_owner is True:
                         owner_role = guild.get_role(utils.StaffRoles.owner)  # Check for owner
                         new_roles += [owner_role]
-                    elif mute.is_admin is True:
+                    elif entry.is_admin is True:
                         admin_role = guild.get_role(utils.StaffRoles.admin)  # Check for admin
                         new_roles += [admin_role]
-                    elif mute.is_mod is True:
+                    elif entry.is_mod is True:
                         mod_role = guild.get_role(utils.StaffRoles.mod)  # Check for mod
                         new_roles += [mod_role]
                     await member.edit(roles=new_roles, reason=f'[UNMUTE] Mute Expired.')
@@ -179,25 +297,25 @@ class Moderation(commands.Cog):
                         f'Hello, your mute in `{guild.name}` has expired. You have been unmuted.'
                     )
 
-                if mute.filter is True:
-                    mute.is_muted = False
-                    mute.streak_expire_date = datetime.now() + relativedelta(days=21)
-                    await mute.commit()
+                if entry.filter is True:
+                    entry.is_muted = False
+                    entry.streak_expire_date = datetime.now() + relativedelta(days=21)
+                    await entry.commit()
                 else:
-                    if mute.streak == 0:
-                        await self.bot.db.delete('mutes', {'_id': mute.id})
+                    if entry.streak == 0:
+                        await self.bot.db.delete('mutes', {'_id': entry.id})
                     else:
-                        mute.is_muted = False
-                        await mute.commit()
+                        entry.is_muted = False
+                        await entry.commit()
 
-                mem = guild.get_member(mute.muted_by)
+                mem = guild.get_member(entry.muted_by)
                 await utils.log(
                     self.bot.webhooks['mod_logs'],
                     title='[MUTE EXPIRED]',
                     fields=[
                         ('Member', _mem),
-                        ('Reason', mute.reason),
-                        ('Mute Duration', f'`{mute.duration}`'),
+                        ('Reason', entry.reason),
+                        ('Mute Duration', f'`{entry.duration}`'),
                         ('By', mem.mention),
                         ('At', utils.format_dt(datetime.now(), 'F')),
                     ]
@@ -209,17 +327,17 @@ class Moderation(commands.Cog):
 
     @tasks.loop(seconds=5.0)
     async def check_streaks(self):
-        mutes: list[utils.Mutes] = await self.bot.db.find_sorted('mutes', 'streak_expire_date', 1, {'is_muted': False})
-        for mute in mutes[:10]:
-            if datetime.now() >= mute.streak_expire_date:
-                await self.bot.db.delete('mutes', {'_id': mute.pk})
+        entries: list[utils.Mute] = await self.bot.db.find_sorted('mutes', 'streak_expire_date', 1, {'is_muted': False})
+        for entry in entries[:10]:
+            if datetime.now() >= entry.streak_expire_date:
+                await self.bot.db.delete('mutes', {'_id': entry.pk})
 
                 guild = self.bot.get_guild(1116770122770685982)
-                usr = guild.get_member(mute.id)
+                usr = guild.get_member(entry.id)
                 if usr:
                     mem = f'{usr.display_name} (`{usr.id}`)'
                 else:
-                    mem = f'**[LEFT]** (`{mute.id}`)'
+                    mem = f'**[LEFT]** (`{entry.id}`)'
 
                 await utils.log(
                     self.bot.webhooks['mod_logs'],
