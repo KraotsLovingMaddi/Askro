@@ -79,7 +79,8 @@ def create_intro_embed(intro: Intros, member: disnake.Member):
     em.set_footer(text='Intro created at')
     em.timestamp = intro.created_at
     em.set_thumbnail(url=member.display_avatar)
-    
+    em.color = member.color
+
     return em
 
 
@@ -322,6 +323,16 @@ class IntroHalfTwo(Modal):
 
         guild = interaction.bot.get_guild(1116770122770685982)
         channel = guild.get_channel(utils.Channels.intros)
+
+        if self.redoing is False:
+            # I'm only doing this just to increase the randomness even more.
+            for i in range(5):
+                random.shuffle(ALL_COLOURS)
+
+            random_colour = guild.get_role(random.choice(ALL_COLOURS))
+            new_roles = [r for r in interaction.author.roles if r.id != utils.ExtraRoles.unverified] + [random_colour]
+            await interaction.author.edit(roles=new_roles)
+
         em = create_intro_embed(self.intro, interaction.author)
 
         m = await channel.send(embed=em)
@@ -332,14 +343,6 @@ class IntroHalfTwo(Modal):
             self.intro.message_id = m.id
             await self.intro.commit()
         else:
-            # I'm only doing this just to increase the randomness even more.
-            for i in range(5):
-                random.shuffle(ALL_COLOURS)
-
-            random_colour = guild.get_role(random.choice(ALL_COLOURS))
-            new_roles = [r for r in interaction.author.roles if r.id != utils.ExtraRoles.unverified] + [random_colour]
-            await interaction.author.edit(roles=new_roles)
-
             self.intro.message_id = m.id
             await interaction.bot.db.add('intros', self.intro)
 
