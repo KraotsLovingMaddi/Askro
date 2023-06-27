@@ -52,6 +52,8 @@ class Moderation(commands.Cog):
             expiration_date = utils.format_dt(time_and_reason.dt, 'F')
         except commands.BadArgument as e:
             return await inter.send(f'{self.bot.denial} {e}', ephemeral=True)
+        except TypeError:
+            return await inter.send(f'{self.bot.denial} Invalid time provided.', ephemeral=True)
 
         if member.top_role >= inter.author.top_role and inter.author.id not in self.bot.owner_ids:
             return await inter.send(
