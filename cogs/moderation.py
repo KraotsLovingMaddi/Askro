@@ -147,7 +147,7 @@ class Moderation(commands.Cog):
             fields=[
                 ('Member', f'{member.display_name} (`{member.id}`)'),
                 ('Reason', reason),
-                ('Duration', mute_duration),
+                ('Duration', f'`{mute_duration}`'),
                 ('Expires At', expiration_date),
                 ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
                 ('At', utils.format_dt(datetime.now(), 'F')),
