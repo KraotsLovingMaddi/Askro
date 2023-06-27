@@ -272,7 +272,7 @@ class Moderation(commands.Cog):
                 ('Original Duration', f'`{mute_duration}`'),
                 ('Original Expiration Date', expiration_date),
                 ('Remaining', f'`{remaining}`'),
-                ('Originally Muted By', f'`{_muted_by.mention}` (`{_muted_by.id}`)'),
+                ('Originally Muted By', f'{_muted_by.mention} (`{_muted_by.id}`)'),
                 ('By', f'{inter.author.mention} (`{inter.author.id}`)'),
                 ('At', utils.format_dt(datetime.now(), 'F')),
             ]
