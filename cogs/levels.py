@@ -286,7 +286,7 @@ class Levels(commands.Cog):
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
                 return await inter.send(
-                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    f'{self.bot.denial} This command can only be used by staff members!',
                     ephemeral=True
             )
 
@@ -321,7 +321,7 @@ class Levels(commands.Cog):
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
                 return await inter.send(
-                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    f'{self.bot.denial} This command can only be used by staff members!',
                     ephemeral=True
             )
 
@@ -352,7 +352,7 @@ class Levels(commands.Cog):
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
                 return await inter.send(
-                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    f'{self.bot.denial} This command can only be used by staff members!',
                     ephemeral=True
             )
 
