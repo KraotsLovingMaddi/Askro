@@ -548,7 +548,7 @@ class Intro_(commands.Cog, name='Intros'):
         if inter.author.id not in self.bot.owner_ids:
             if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
                 return await inter.send(
-                    f'{self.bot.denial} You are not allowed to use this command.',
+                    f'{self.bot.denial} This command can only be used by admins and above!',
                     ephemeral=True
                 )
             elif member.top_role >= inter.author.top_role:
