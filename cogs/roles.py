@@ -148,7 +148,7 @@ class Roles(commands.Cog):
 
         await inter.send(
             f'Use the select menu below to change your `{role_type}`.',
-            view=RolesView(),
+            view=RolesView(role_type),
             ephemeral=True
         )
 
