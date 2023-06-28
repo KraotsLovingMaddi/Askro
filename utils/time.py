@@ -156,6 +156,8 @@ class UserFriendlyTime:
         if status.accuracy == pdt.pdtContext.ACU_HALFDAY:
             dt = dt.replace(day=now.day + 1)
 
+        result.dt = dt
+
         if begin in (0, 1):
             if begin == 1:
                 # check if it's quoted:
