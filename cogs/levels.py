@@ -70,7 +70,12 @@ class Levels(commands.Cog):
         inter: disnake.AppCmdInter,
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """View your current level or somebody else's."""
+        """View your current level or somebody else's.
+
+        Parameters
+        ----------
+        member: The member to view the level of.
+        """
 
         if inter.channel.id not in (1116854686759268352, 1117148228941525012, 1116786173621309481):
             if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
@@ -134,7 +139,13 @@ class Levels(commands.Cog):
         level: int = commands.Param(ge=1, le=900),  # From 1 to 900 including those 2 as well.
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """Set the level for a member."""
+        """Set the level for a member.
+
+        Parameters
+        ----------
+        level: The level to set.
+        member: The member to set the new level to.
+        """
 
         if member.id not in self.bot.owner_ids:
             return await inter.send(
@@ -206,7 +217,12 @@ class Levels(commands.Cog):
         inter: disnake.AppCmdInter,
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """View yours or somebody else's total messages."""
+        """View yours or somebody else's total messages.
+
+        Parameters
+        ----------
+        member: The member to view the messages of.
+        """
 
         if inter.channel.id not in (1116854686759268352, 1117148228941525012, 1116786173621309481):
             if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
@@ -281,7 +297,13 @@ class Levels(commands.Cog):
         amount: str,
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """Add a certain amount of messages for the member."""
+        """Add a certain amount of messages for the member.
+
+        Parameters
+        ----------
+        amount: The amount of messages to add.
+        member: The member to add the amount of messages to.
+        """
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
@@ -316,7 +338,13 @@ class Levels(commands.Cog):
         amount: str,
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """Set the amount of messages for the member."""
+        """Set the amount of messages for the member.
+
+        Parameters
+        ----------
+        amount: The amount of messages to set.
+        member: The member to set the amount of messages for.
+        """
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
@@ -347,7 +375,12 @@ class Levels(commands.Cog):
 
     @messages.sub_command(name='reset')
     async def msg_reset(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Reset the amount of total messages for the member."""
+        """Reset the amount of total messages for the member.
+
+        Parameters
+        ----------
+        member: The member to reset the amount of messages for.
+        """
 
         if not any(r for r in utils.StaffRoles.all if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:

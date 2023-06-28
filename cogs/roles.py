@@ -144,7 +144,12 @@ class Roles(commands.Cog):
             'Sexuality', 'Pronouns'
         ])
     ):
-        """Change your roles."""
+        """Change your roles.
+
+        Parameters
+        ----------
+        role_type: The type of role you want to change.
+        """
 
         await inter.send(
             f'Use the select menu below to change your `{role_type}`.',

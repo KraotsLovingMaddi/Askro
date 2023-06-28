@@ -113,7 +113,12 @@ class Stories(commands.Cog):
         inter: disnake.AppCmdInter,
         story_name: str
     ):
-        """View a story."""
+        """View a story.
+
+        Parameters
+        ----------
+        story_name: The name of the story you want to view.
+        """
 
         if inter.author.id not in self.bot.owner_ids:
             return await inter.send('**[CURRENTLY UNDER DEVELOPMENT]**', ephemeral=True)

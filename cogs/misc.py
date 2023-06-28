@@ -21,7 +21,12 @@ class Misc(commands.Cog):
 
     @rules.sub_command(name='view')
     async def rules_view(self, inter: disnake.AppCmdInter, rule: int = None):
-        """Sends the server's rules. If ``rule`` is given, it will only send that rule."""
+        """Sends the server's rules. If ``rule`` is given, it will only send that rule.
+
+        Parameters
+        ----------
+        rule: The number of the rule you want to view.
+        """
 
         entry: utils.Misc = await self.bot.db.get('misc')
         if len(entry.rules) == 0:
@@ -65,7 +70,12 @@ class Misc(commands.Cog):
 
     @rules.sub_command(name='add')
     async def rules_add(self, inter: disnake.AppCmdInter, rule: str):
-        """Adds a rule to the server's rules."""
+        """Adds a rule to the server's rules.
+
+        Parameters
+        ----------
+        rule: The rule you want to add.
+        """
 
         if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
@@ -85,7 +95,13 @@ class Misc(commands.Cog):
 
     @rules.sub_command(name='edit')
     async def server_rules_edit(self, inter: disnake.AppCmdInter, rule: int, new_rule: str):
-        """Edits an existing rule."""
+        """Edits an existing rule.
+
+        Parameters
+        ----------
+        rule: The number of the rule you want to edit.
+        new_rule: The new rule to replace it.
+        """
 
         if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:
@@ -120,7 +136,12 @@ class Misc(commands.Cog):
 
     @rules.sub_command(name='remove')
     async def server_rules_remove(self, inter: disnake.AppCmdInter, rule: int):
-        """Removes a rule from the server's rules by its number."""
+        """Removes a rule from the server's rules by its number.
+
+        Parameters
+        ----------
+        rule: The number of the rule to remove.
+        """
 
         if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
             if inter.author.id not in self.bot.owner_ids:

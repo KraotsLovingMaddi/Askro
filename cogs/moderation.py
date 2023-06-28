@@ -44,7 +44,14 @@ class Moderation(commands.Cog):
         duration: str,
         reason: str
     ):
-        """Mutes a member."""
+        """Mutes a member.
+
+        Parameters
+        ----------
+        member: The member to mute.
+        duration: The length for which the mute should last.
+        reason: The reason the member is being muted.
+        """
 
         if await self.check_perms(inter) is False:
             return
@@ -156,7 +163,12 @@ class Moderation(commands.Cog):
 
     @commands.slash_command(name='unmute')
     async def unmute(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Unmutes a member."""
+        """Unmutes a member.
+
+        Parameters
+        ----------
+        member: The member you want to unmute.
+        """
 
         if await self.check_perms(inter) is False:
             return
@@ -365,7 +377,13 @@ class Moderation(commands.Cog):
 
     @commands.slash_command(name='ban')
     async def ban(self, inter: disnake.AppCmdInter, member: disnake.Member, reason: str):
-        """Ban a member."""
+        """Ban a member.
+
+        Parameters
+        ----------
+        member: The member you want to ban.
+        reason: The reason you're banning them.
+        """
 
         if await self.check_perms(inter) is False:
             return
@@ -421,7 +439,13 @@ class Moderation(commands.Cog):
 
     @commands.slash_command(name='kick')
     async def kick(self, inter: disnake.AppCmdInter, member: disnake.Member, reason: str):
-        """Kick a member."""
+        """Kick a member.
+
+        Parameters
+        ----------
+        member: The member you want to kick.
+        reason: The reason you're kicking them.
+        """
 
         if await self.check_perms(inter) is False:
             return
@@ -472,7 +496,12 @@ class Moderation(commands.Cog):
 
     @commands.slash_command(name='purge')
     async def purge(self, inter: disnake.AppCmdInter, amount: int = commands.Param(ge=1)):
-        """Purge an amount of messages from the current channel."""
+        """Purge an amount of messages from the current channel.
+
+        Parameters
+        ----------
+        amount: The amount of messages to delete.
+        """
 
         if await self.check_perms(inter) is False:
             return
@@ -568,7 +597,12 @@ class Moderation(commands.Cog):
 
     @bad_words.sub_command(name='add')
     async def bad_words_add(self, inter: disnake.AppCmdInter, word: str):
-        """Adds a bad word to the existing bad words."""
+        """Adds a bad word to the existing bad words.
+
+        Parameters
+        ----------
+        word: The bad word you want to add.
+        """
 
         if await self.check_perms(inter) is False:
             return
@@ -597,7 +631,12 @@ class Moderation(commands.Cog):
 
     @bad_words.sub_command(name='remove')
     async def bad_words_remove(self, inter: disnake.AppCmdInter, word: str):
-        """Removes a bad word to the existing bad words."""
+        """Removes a bad word to the existing bad words.
+
+        Parameters
+        ----------
+        word: The word you want to remove.
+        """
 
         if await self.check_perms(inter) is False:
             return

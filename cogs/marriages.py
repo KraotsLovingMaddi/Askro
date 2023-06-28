@@ -24,7 +24,12 @@ class Marriages(commands.Cog):
 
     @commands.slash_command(name='marry')
     async def marry(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Marry the member if they want to and if you're/they're not taken by somebody else already."""
+        """Marry the member if they want to and if you're/they're not taken by somebody else already.
+
+        Parameters
+        ----------
+        member: The member you want to marry.
+        """
 
         if self.currently_marrying is True:
             return await inter.send(
@@ -184,7 +189,12 @@ class Marriages(commands.Cog):
         inter: disnake.AppCmdInter,
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """See who, the date and how much it's been since the member married their partner if they have one."""
+        """See who, the date and how much it's been since the member married their partner if they have one.
+
+        Parameters
+        ----------
+        member: The member to view the marriage of.
+        """
 
         data: Marriage = await self.bot.db.get('marriage', member.id)
         if data is None or data.married_to == 0:
@@ -208,7 +218,12 @@ class Marriages(commands.Cog):
 
     @commands.slash_command(name='kiss')
     async def _kiss(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Kiss the person you are married with."""
+        """Kiss the person you are married with.
+
+        Parameters
+        ----------
+        member: The member you want to kiss. (Must be the one you're married to.)
+        """
 
         guild = self.bot.get_guild(1116770122770685982)
         data = await self.bot.db.get('marriage', inter.author.id)
@@ -235,7 +250,12 @@ class Marriages(commands.Cog):
 
     @commands.slash_command(name='adopt')
     async def adopt(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Adopt someone into your family."""
+        """Adopt someone into your family.
+
+        Parameters
+        ----------
+        member: The member you want to adopt in your family.
+        """
 
         if self.currently_adopting is True:
             return await inter.send(
@@ -371,7 +391,12 @@ class Marriages(commands.Cog):
 
     @commands.slash_command(name='unadopt')
     async def unadopt(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Unadopt one of your children."""
+        """Unadopt one of your children.
+
+        Parameters
+        ----------
+        member: The member you want to unadopt.
+        """
 
         if self.currently_unadopting is True:
             return await inter.send(
@@ -457,6 +482,10 @@ class Marriages(commands.Cog):
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
         """See your family members. This basically shows you who you have adopted, and who you are married to.
+
+        Parameters
+        ----------
+        member: The member of who's family you want to see.
         """
 
         if member.bot:
