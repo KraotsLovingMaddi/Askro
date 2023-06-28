@@ -54,6 +54,7 @@ class AutoMod(commands.Cog):
             return 'permanent'  # This shouldn't really even happen, but just in case it really gets that bad.
 
     async def apply_action(self, message: disnake.Message, reason: str):
+        user = message.author
         time = await self.get_mute_time(user.id)
         if time == 'permanent':
             time = '999years'
@@ -61,7 +62,6 @@ class AutoMod(commands.Cog):
         duration = utils.human_timedelta(_data.dt, suffix=False)
         expiration_date = utils.format_dt(_data.dt, "F")
 
-        user = message.author
         guild = self.bot.get_guild(1116770122770685982)
         role = guild.get_role(ExtraRoles.muted)
 
@@ -95,8 +95,8 @@ class AutoMod(commands.Cog):
         if StaffRoles.mod in (r.id for r in message.author.roles):  # Checks for mod
             data.is_mod = True
         new_roles = [role for role in user.roles
-                     if role.id != StaffRoles.mod
-                     ] + [role]
+                        if role.id != StaffRoles.mod
+                        ] + [role]
         await user.edit(roles=new_roles, reason=f'[AUTOMOD: {reason.upper()}]')
 
         if data.permanent is True:
