@@ -488,6 +488,34 @@ class Moderation(commands.Cog):
             ]
         )
 
+    @commands.slash_command(name='lockdown')
+    async def lockdown(self, inter: disnake.AppCmdInter):
+        """Locks down all channels."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        entry: utils.Misc = await self.bot.db.get('misc')
+        entry.in_lockdown = not entry.in_lockdown
+        await entry.commit()
+
+        value = None if entry.lockdown is False else True
+
+        guild = self.bot.get_guild(1116770122770685982)
+        for text_channel in guild.text_channels:
+            overwrite = text_channel.overwrites_for(guild.default_role)
+            overwrite.send_messages = value
+            await text_channel.set_permissions(guild.default_role, overwrite)
+
+        for voice_channel in guild.voice_channels:
+            overwrite = voice_channel.overwrites_for(guild.default_role)
+            overwrite.speak = value
+            await voice_channel.set_permissions(guild.default_role, overwrite)
+
+        if value is None:
+            return await inter.send('> 👌 Lockdown ended.')
+        await inter.send('> 👌 All chanenls have been locked down.')
+
 
 def setup(bot: Askro):
     bot.add_cog(Moderation(bot))

@@ -16,6 +16,7 @@ class Misc(Document, GetDoc):
     min_account_age = IntField(default=7)
     bad_words = DictField(StrField(), IntField())
     rules = ListField(StrField())
+    in_lockdown = BoolField(default=False)
 
     class Meta:
         collection_name = 'Miscellaneous'
