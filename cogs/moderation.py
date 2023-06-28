@@ -525,7 +525,7 @@ class Moderation(commands.Cog):
 
         if value is None:
             return await inter.send('> 👌 Lockdown ended.')
-        await inter.send('> 👌 All chanenls have been locked down.')
+        await inter.send('> 👌 All channels have been locked down.')
 
 
 def setup(bot: Askro):
