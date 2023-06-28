@@ -175,6 +175,12 @@ class Misc(commands.Cog):
 
         await inter.send('> 👌 Successfully **cleared** the rules.')
 
+    @commands.slash_command(name='invite')
+    async def invite(self, inter: disnake.AppCmdInter):
+        """Sends the invite to this server."""
+
+        await inter.send('https://discord.gg/gpntFHQQ82')
+
 
 def setup(bot: Askro):
     bot.add_cog(Misc(bot))
