@@ -279,7 +279,10 @@ class ContinueIntro(disnake.ui.View):
     @disnake.ui.button(label='Continue', style=disnake.ButtonStyle.blurple)
     async def continue_intro(self, button: disnake.ui.Button, inter: disnake.Interaction):
         await inter.response.send_modal(IntroHalfTwo(self.intro, self.redoing))
-        await inter.edit_original_message('Thanks for verifying!', view=None)
+        if self.redoing is False:
+            await inter.edit_original_message('Thanks for verifying!', view=None)
+        else:
+            await inter.edit_original_message('Intro edited.', view=None)
 
 
 class IntroHalfTwo(Modal):
@@ -531,7 +534,10 @@ class Intro_(commands.Cog, name='Intros'):
             'Country', 'DMS', 'Likes', 'Dislikes', 'Hobbies'
         ])
     ):
-        """Edit a field in your intro."""
+        """Edit a field in your intro.
+
+        field: The field in your intro to edit.
+        """
 
         intro: Intros = await self.bot.db.get('intros', inter.author.id)
         if intro is None:
@@ -544,7 +550,10 @@ class Intro_(commands.Cog, name='Intros'):
 
     @commands.slash_command(name='unverify', dm_permission=False)
     async def unverify(self, inter: disnake.AppCmdInter, member: disnake.Member):
-        """Unverifies a member if they have a troll or malicious intro."""
+        """Unverifies a member if they have a troll or malicious intro.
+
+        member: The member to unverify.
+        """
 
         if inter.author.id not in self.bot.owner_ids:
             if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
