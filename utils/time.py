@@ -116,6 +116,7 @@ class UserFriendlyTime:
             data = {k: int(v) for k, v in match.groupdict(default=0).items()}
             remaining = argument[match.end():].strip()
             result.dt = now + relativedelta(**data)
+            result.dt = result.dt.replace(tzinfo=datetime.timezone.utc)
             return await result.check_constraints(now, remaining)
 
         # apparently nlp does not like "from now"
