@@ -120,15 +120,15 @@ class RolesView(disnake.ui.View):
     def __init__(self, role_type: str):
         super().__init__(timeout=None)
         if role_type == 'DMS':
-            self.add_item(RolesDMSSelect)
+            self.add_item(RolesDMSSelect())
         elif role_type == 'Age':
-            self.add_item(RolesAgeSelect)
+            self.add_item(RolesAgeSelect())
         elif role_type == 'Gender':
-            self.add_item(RolesAgeSelect)
+            self.add_item(RolesAgeSelect())
         elif role_type == 'Sexuality':
-            self.add_item(RolesSexualitySelect)
+            self.add_item(RolesSexualitySelect())
         elif role_type == 'Pronouns':
-            self.add_item(RolesPronounsSelect)
+            self.add_item(RolesPronounsSelect())
 
 
 class Roles(commands.Cog):
