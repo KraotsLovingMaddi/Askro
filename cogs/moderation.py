@@ -190,7 +190,7 @@ class Moderation(commands.Cog):
             staff_rank = 'Moderator'
 
         if entry.filter is True:
-            if entry.streak == 7:
+            if entry.streak >= 7:
                 await self.bot.db.delete('mutes', {'_id': entry.pk})
             else:
                 entry.streak_expire_date = datetime.now() + relativedelta(days=21)
@@ -306,9 +306,12 @@ class Moderation(commands.Cog):
                     )
 
                 if entry.filter is True:
-                    entry.is_muted = False
-                    entry.streak_expire_date = datetime.now() + relativedelta(days=21)
-                    await entry.commit()
+                    if entry.streak >= 7:
+                        await self.bot.db.delete('mutes', {'_id': entry.pk})
+                    else:
+                        entry.is_muted = False
+                        entry.streak_expire_date = datetime.now() + relativedelta(days=21)
+                        await entry.commit()
                 else:
                     if entry.streak == 0:
                         await self.bot.db.delete('mutes', {'_id': entry.id})
