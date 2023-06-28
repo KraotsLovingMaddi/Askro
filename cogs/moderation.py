@@ -474,8 +474,10 @@ class Moderation(commands.Cog):
         if await self.check_perms(inter) is False:
             return
 
+        await inter.response.defer()
+
         messages = await inter.channel.purge(limit=amount)
-        await inter.send(f'> 👌 Purged `{len(messages):,}` messages.')
+        await inter.send(f'> 👌 Purged `{len(messages):,}` messages.', delete_after=5.0)
 
         await utils.log(
             self.bot.webhooks['mod_logs'],
@@ -505,9 +507,16 @@ class Moderation(commands.Cog):
 
         guild = self.bot.get_guild(1116770122770685982)
         for text_channel in guild.text_channels:
-            overwrite = text_channel.overwrites_for(guild.default_role)
-            overwrite.send_messages = value
-            await text_channel.set_permissions(guild.default_role, overwrite=overwrite)
+            if text_channel.id not in (
+                utils.Channels.verify, utils.Channels.rules, utils.Channels.welcome,
+                utils.Channels.intros, utils.Channels.how_to, utils.Channels.staff_chat,
+                utils.Channels.bot_commands, utils.Channels.ideas, utils.Channels.lore_shit,
+                utils.Channels.logs, utils.Channels.messages_logs, utils.Channels.moderation_logs,
+                utils.Channels.github, utils.Channels.discord_notifications, utils.Channels.roblox_logs
+            ):
+                overwrite = text_channel.overwrites_for(guild.default_role)
+                overwrite.send_messages = value
+                await text_channel.set_permissions(guild.default_role, overwrite=overwrite)
 
         for voice_channel in guild.voice_channels:
             overwrite = voice_channel.overwrites_for(guild.default_role)
