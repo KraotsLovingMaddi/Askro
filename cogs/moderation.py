@@ -559,7 +559,7 @@ class Moderation(commands.Cog):
                 f'`{word}` - added by {added_by}'
             )
 
-        pag = utils.SimplePages(inter, entries, compact=True)
+        pag = utils.SimplePages(inter, entries, compact=True, entries_name='bad words')
         pag.embed.title = 'Here\'s all the currently added bad words'
         await pag.start()
 
