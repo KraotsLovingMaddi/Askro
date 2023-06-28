@@ -528,6 +528,130 @@ class Moderation(commands.Cog):
             return await inter.send('> 👌 Lockdown ended.')
         await inter.send('> 👌 All channels have been locked down.')
 
+    @commands.slash_command(name='badwords')
+    async def bad_words(self, inter):
+        pass
+
+    @bad_words.sub_command(name='view')
+    async def bad_words_view(self, inter: disnake.AppCmdInter):
+        """See a list of all the currently added bad words."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        entry: utils.Misc = await self.bot.db.get('misc')
+        if len(entry.bad_words) == 0:
+            return await inter.send(
+                f'{self.bot.denial} There are no currently added bad words.',
+                ephemeral=True
+            )
+
+        guild = self.bot.get_guild(1116770122770685982)
+        sorted_ = [w for w in sorted(entry.bad_words.keys())]
+        entries = []
+        for word in sorted_:
+            added_by_id = entry.bad_words[word]
+            added_by = guild.get_member(added_by_id)
+            added_by = f'**{added_by.display_name}**' or '**[LEFT]**'
+            added_by = added_by + f' (`{added_by_id}`)'
+
+            entries.append(
+                f'`{word}` - added by {added_by}'
+            )
+
+        pag = utils.SimplePages(inter, entries, compact=True)
+        pag.embed.title = 'Here\'s all the currently added bad words'
+        await pag.start()
+
+    @bad_words.sub_command(name='add')
+    async def bad_words_add(self, inter: disnake.AppCmdInter, word: str):
+        """Adds a bad word to the existing bad words."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
+            if inter.author.id not in self.bot.owner_ids:
+                await inter.send(
+                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    ephemeral=True
+                )
+
+        word = word.lower()
+        entry: utils.Misc = await self.bot.db.get('misc')
+
+        if word in [w for w in entry.bad_words.keys()]:
+            return await inter.send(
+                f'{self.bot.denial} That bad word is already added in the list.',
+                ephemeral=True
+            )
+
+        self.bot.bad_words[word] = inter.author.id
+        entry.bad_words[word] = inter.author.id
+        await entry.commit()
+
+        await inter.send(f'Successfully **added** `{word}` to the bad words list.')
+
+    @bad_words.sub_command(name='remove')
+    async def bad_words_remove(self, inter: disnake.AppCmdInter, word: str):
+        """Removes a bad word to the existing bad words."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        if not any(r for r in (utils.StaffRoles.owner, utils.StaffRoles.admin) if r in (role.id for role in inter.author.roles)):
+            if inter.author.id not in self.bot.owner_ids:
+                await inter.send(
+                    f'{self.bot.denial} This command can only be used by admins and above!',
+                    ephemeral=True
+                )
+
+        word = word.lower()
+        entry: utils.Misc = await self.bot.db.get('misc')
+        if len(entry.bad_words) == 0:
+            return await inter.send(
+                f'{self.bot.denial} There are no currently added bad words.',
+                ephemeral=True
+            )
+        elif word not in entry.bad_words.keys():
+            return await inter.send(
+                f'{self.bot.denial} That word is not added in list of bad words.',
+                ephemeral=True
+            )
+
+        del entry.bad_words[word]
+        del self.bot.bad_words[word]
+        await entry.commit()
+
+        await inter.send(f'Successfully **removed** `{word}` to the bad words list.')
+
+    @bad_words.sub_command(name='clear')
+    async def clear_bad_word(self, inter: disnake.AppCmdInter):
+        """Clear the custom bad words. This deletes all of them."""
+
+        if await self.check_perms(inter) is False:
+            return
+
+        if not any(r for r in (utils.StaffRoles.owner,) if r in (role.id for role in inter.author.roles)):
+            if inter.author.id not in self.bot.owner_ids:
+                await inter.send(
+                    f'{self.bot.denial} This command can only be used by owners!',
+                    ephemeral=True
+                )
+
+        entry: utils.Misc = await self.bot.db.get('misc')
+        if len(entry.bad_words) == 0:
+            return await inter.send(
+                f'{self.bot.denial} There are no currently added bad words.',
+                ephemeral=True
+            )
+
+        entry.bad_words = {}
+        self.bot.bad_words = {}
+        await entry.commit()
+
+        await inter.send('Successfully **cleared** the bad words list.')
+
 
 def setup(bot: Askro):
     bot.add_cog(Moderation(bot))
