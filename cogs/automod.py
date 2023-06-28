@@ -206,9 +206,6 @@ class AutoMod(commands.Cog):
                 return await self.apply_action(message, 'bad words')
 
     async def anti_invites(self, message: disnake.Message):
-        if message.channel.id == utils.Channels.self_ad:
-            return
-
         current = message.created_at.timestamp()
         content = utils.remove_zalgos(message.content.replace(' ', '').replace('\\', ''))
         matches = utils.INVITE_REGEX.findall(content)
@@ -229,9 +226,6 @@ class AutoMod(commands.Cog):
                 return
 
     async def anti_newlines(self, message: disnake.Message):
-        if message.channel.id == utils.Channels.self_ad:
-            return
-
         current = message.created_at.timestamp()
 
         count = message.content.count('\n')
