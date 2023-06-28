@@ -81,6 +81,7 @@ class AutoMod(commands.Cog):
             )
             data_was_none = True
         else:
+            data.muted_by = self.bot.user.id
             data.is_muted = True
             data.muted_until = _data.dt
             data.reason = _data.arg
