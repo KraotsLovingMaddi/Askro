@@ -86,7 +86,7 @@ class AutoMod(commands.Cog):
             data.muted_until = _data.dt
             data.reason = _data.arg
             data.duration = duration
-            data.muted = True
+            data.is_muted = True
             data.streak += 1
             data.filter = True
 
