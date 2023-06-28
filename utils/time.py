@@ -116,7 +116,6 @@ class UserFriendlyTime:
             data = {k: int(v) for k, v in match.groupdict(default=0).items()}
             remaining = argument[match.end():].strip()
             result.dt = now + relativedelta(**data)
-            result.dt = result.dt.replace(tzinfo=datetime.timezone.utc)
             return await result.check_constraints(now, remaining)
 
         # apparently nlp does not like "from now"
@@ -156,8 +155,6 @@ class UserFriendlyTime:
         # if midnight is provided, just default to next day
         if status.accuracy == pdt.pdtContext.ACU_HALFDAY:
             dt = dt.replace(day=now.day + 1)
-
-        result.dt = dt.replace(tzinfo=datetime.timezone.utc)
 
         if begin in (0, 1):
             if begin == 1:
