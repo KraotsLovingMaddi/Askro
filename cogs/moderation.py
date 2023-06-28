@@ -499,7 +499,7 @@ class Moderation(commands.Cog):
         entry.in_lockdown = not entry.in_lockdown
         await entry.commit()
 
-        value = None if entry.lockdown is False else True
+        value = None if entry.in_lockdown is False else True
 
         guild = self.bot.get_guild(1116770122770685982)
         for text_channel in guild.text_channels:
