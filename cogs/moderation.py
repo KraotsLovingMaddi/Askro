@@ -512,7 +512,8 @@ class Moderation(commands.Cog):
                 utils.Channels.intros, utils.Channels.how_to, utils.Channels.staff_chat,
                 utils.Channels.bot_commands, utils.Channels.ideas, utils.Channels.lore_shit,
                 utils.Channels.logs, utils.Channels.messages_logs, utils.Channels.moderation_logs,
-                utils.Channels.github, utils.Channels.discord_notifications, utils.Channels.roblox_logs
+                utils.Channels.github, utils.Channels.discord_notifications, utils.Channels.roblox_logs,
+                utils.Channels.news
             ):
                 overwrite = text_channel.overwrites_for(guild.default_role)
                 overwrite.send_messages = value
