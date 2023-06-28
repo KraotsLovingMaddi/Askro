@@ -59,7 +59,7 @@ class RolesAgeSelect(disnake.ui.Select['RolesView']):
         roles = [role for role in interaction.author.roles if role.id not in AGE_ROLES.values()]
         roles.append(interaction.guild.get_role(AGE_ROLES[value]))
         await interaction.author.edit(roles=roles, reason='Age role update via select menu.')
-        await interaction.response.edit_message(content=f'Changed your age to `{value}`')
+        await interaction.response.edit_message(content=f'Changed your age role to `{value}`')
 
 
 class RolesGenderSelect(disnake.ui.Select['RolesView']):
