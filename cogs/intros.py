@@ -510,7 +510,12 @@ class Intro_(commands.Cog, name='Intros'):
         inter: disnake.AppCmdInter,
         member: disnake.Member = commands.Param(lambda inter: inter.author)
     ):
-        """Views a member's intro."""
+        """Views a member's intro.
+        
+        Parameters
+        ----------
+        member: The member that you want to see the intro of.
+        """
 
         intro: Intros = await self.bot.db.get('intros', member.id)
         if intro is None:
@@ -536,6 +541,8 @@ class Intro_(commands.Cog, name='Intros'):
     ):
         """Edit a field in your intro.
 
+        Parameters
+        ----------
         field: The field in your intro to edit.
         """
 
@@ -552,6 +559,8 @@ class Intro_(commands.Cog, name='Intros'):
     async def unverify(self, inter: disnake.AppCmdInter, member: disnake.Member):
         """Unverifies a member if they have a troll or malicious intro.
 
+        Parameters
+        ----------
         member: The member to unverify.
         """
 
