@@ -116,7 +116,7 @@ class Misc(commands.Cog):
             )
         await entry.commit()
 
-        await entry.send(f'> 👌 📝 Successfully **edited** rule `{rule + 1}` to `{new_rule}`.')
+        await inter.send(f'> 👌 📝 Successfully **edited** rule `{rule + 1}` to `{new_rule}`.')
 
     @rules.sub_command(name='remove')
     async def server_rules_remove(self, inter: disnake.AppCmdInter, rule: int):
