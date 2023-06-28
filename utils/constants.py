@@ -79,6 +79,8 @@ class Channels(NamedTuple):
 
     staff_chat = 1116786173621309481
     bot_commands = 1117148228941525012
+    ideas = 1117893777424666634
+    lore_shit = 1117957572541026344
 
     logs = 1117162498735476767
     messages_logs = 1117162512438284338
