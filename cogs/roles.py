@@ -124,7 +124,7 @@ class RolesView(disnake.ui.View):
         elif role_type == 'Age':
             self.add_item(RolesAgeSelect())
         elif role_type == 'Gender':
-            self.add_item(RolesAgeSelect())
+            self.add_item(RolesGenderSelect())
         elif role_type == 'Sexuality':
             self.add_item(RolesSexualitySelect())
         elif role_type == 'Pronouns':
