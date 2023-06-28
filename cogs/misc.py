@@ -24,7 +24,7 @@ class Misc(commands.Cog):
         """Sends the server's rules. If ``rule`` is given, it will only send that rule."""
 
         entry: utils.Misc = await self.bot.db.get('misc')
-        if entry.rules is None:
+        if len(entry.rules) == 0:
             return await inter.send(
                 f'{self.bot.denial} There are currently no rules set. Please contact an admin about this!',
                 ephemeral=True
@@ -95,7 +95,7 @@ class Misc(commands.Cog):
                 )
 
         entry: utils.Misc = await self.bot.db.get('misc')
-        if entry.rules is None:
+        if len(entry.rules) == 0:
             return await inter.send(
                 f'{self.bot.denial} There are currently no rules set.',
                 ephemeral=True
@@ -130,7 +130,7 @@ class Misc(commands.Cog):
                 )
 
         entry: utils.Misc = await self.bot.db.get('misc')
-        if entry.rules is None:
+        if len(entry.rules) == 0:
             return await inter.send(
                 f'{self.bot.denial} There are currently no rules set.',
                 ephemeral=True
@@ -164,13 +164,13 @@ class Misc(commands.Cog):
                 )
 
         entry: utils.Misc = await self.bot.db.get('misc')
-        if entry.rules is None:
+        if len(entry.rules) == 0:
             return await inter.send(
                 f'{self.bot.denial} There are currently no rules set.',
                 ephemeral=True
             )
         else:
-            entry.rules = None
+            entry.rules = []
             await entry.commit()
 
         await inter.send('> 👌 Successfully **cleared** the rules.')
