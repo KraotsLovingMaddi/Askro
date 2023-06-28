@@ -138,7 +138,7 @@ class Levels(commands.Cog):
 
         if member.id not in self.bot.owner_ids:
             return await inter.send(
-                f'{self.bot.denial} Only owners can use this command.'
+                f'{self.bot.denial} This command can only be used by owners!'
             )
 
         xp = ((50 * ((level - 1)**2)) + (50 * (level - 1)))
