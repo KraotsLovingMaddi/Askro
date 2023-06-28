@@ -15,6 +15,7 @@ class Misc(Document, GetDoc):
     disabled_commands = ListField(StrField(), default=[])
     min_account_age = IntField(default=7)
     bad_words = DictField(StrField(), IntField())
+    rules = ListField()
 
     class Meta:
         collection_name = 'Miscellaneous'
