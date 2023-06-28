@@ -246,7 +246,8 @@ class IntroHalfOne(Modal):
         await interaction.send(
             f'{interaction.author.mention} You are almost done. '
             'Press the button below to finish your intro.',
-            view=ContinueIntro(intro, self.inter, self.redoing)
+            view=ContinueIntro(intro, self.inter, self.redoing),
+            ephemeral=True
         )
 
 
@@ -278,7 +279,7 @@ class ContinueIntro(disnake.ui.View):
     @disnake.ui.button(label='Continue', style=disnake.ButtonStyle.blurple)
     async def continue_intro(self, button: disnake.ui.Button, inter: disnake.Interaction):
         await inter.response.send_modal(IntroHalfTwo(self.intro, self.redoing))
-        await inter.delete_original_response()
+        await inter.edit_original_message('Thanks for verifying!', view=None)
 
 
 class IntroHalfTwo(Modal):
