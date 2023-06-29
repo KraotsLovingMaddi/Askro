@@ -17,6 +17,7 @@ class Misc(Document, GetDoc):
     bad_words = DictField(StrField(), IntField())
     rules = ListField(StrField())
     in_lockdown = BoolField(default=False)
+    invalidnames = IntField()
 
     class Meta:
         collection_name = 'Miscellaneous'
