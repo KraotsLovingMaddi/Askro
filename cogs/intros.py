@@ -526,7 +526,7 @@ class Intro_(commands.Cog, name='Intros'):
                 ephemeral=True
             )
 
-        em = create_intro_embed(intro, inter.author)
+        em = create_intro_embed(intro, member)
 
         await inter.send(embed=em, view=utils.UrlButton('Jump!', intro.jump_url))
 
