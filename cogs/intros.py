@@ -605,6 +605,12 @@ class Intro_(commands.Cog, name='Intros'):
     @commands.Cog.listener('on_member_remove')
     async def intro_cleanup(self, member: disnake.Member):
         if member.guild.id == 1116770122770685982:
+            entry: utils.Intros = await self.bot.db.get('intros', member.id)
+            if entry is None:
+                return
+
+            channel = member.guild.get_channel(utils.Channels.intros)
+            await utils.try_delete(message=entry.message_id, channel=channel)
             await self.bot.db.delete('intros', {'_id': member.id})
 
 
