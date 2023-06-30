@@ -222,7 +222,7 @@ class IntroHalfOne(Modal):
                     ('Member', f'{interaction.author} (`{interaction.author.id}`)'),
                     ('Reason', f'User does not match age requirements. (`{values["Age"]} y/o`)'),
                     ('By', f'{interaction.bot.user.mention} (`{interaction.bot.user.id}`)'),
-                    ('At', utils.format_dt(datetime.datetime.now(), 'F')),
+                    ('At', utils.format_dt(datetime.now(), 'F')),
                 ]
             )
 
@@ -453,7 +453,7 @@ class IntroEdit(Modal):
                     ('Member', f'{interaction.author} (`{interaction.author.id}`)'),
                     ('Reason', f'User does not match age requirements. (`{intro.age} y/o`)'),
                     ('By', f'{interaction.bot.user.mention} (`{interaction.bot.user.id}`)'),
-                    ('At', utils.format_dt(datetime.datetime.now(), 'F')),
+                    ('At', utils.format_dt(datetime.now(), 'F')),
                 ]
             )
 
