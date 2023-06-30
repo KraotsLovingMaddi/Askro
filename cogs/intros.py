@@ -585,7 +585,7 @@ class Intro_(commands.Cog, name='Intros'):
 
         guild = inter.bot.get_guild(1116770122770685982)
         channel = guild.get_channel(utils.Channels.intros)
-        await utils.try_delete(message=intro.message_id, channel=channel)
+        await utils.try_delete(message_id=intro.message_id, channel=channel)
 
         await self.bot.db.delete('intros', {'_id': intro.id})
         unverified_role = guild.get_role(1121949200414949447)
@@ -610,7 +610,7 @@ class Intro_(commands.Cog, name='Intros'):
                 return
 
             channel = member.guild.get_channel(utils.Channels.intros)
-            await utils.try_delete(message=entry.message_id, channel=channel)
+            await utils.try_delete(message_id=entry.message_id, channel=channel)
             await self.bot.db.delete('intros', {'_id': member.id})
 
 
