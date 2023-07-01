@@ -13,7 +13,7 @@ from main import Askro
 
 
 async def timezones_autocomp(inter: disnake.AppCmdInter, timezone: str):
-    return utils.finder(timezone, [t.replace('_', ' ') for t in pytz.all_timezones])
+    return utils.finder(timezone, [t.replace('_', ' ') for t in pytz.all_timezones], lazy=False)[:25]
 
 
 class Birthdays(commands.Cog):
