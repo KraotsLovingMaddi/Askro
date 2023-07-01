@@ -104,7 +104,18 @@ class Birthdays(commands.Cog):
                     ephemeral=True
                 )
 
+        _now = datetime.now() + relativedelta(days=3)  # Use this as source so it doesn't fail to say the right age for the people in UTC- timezones.
+        age = utils.human_timedelta(entry.birthday_date, source=_now, accuracy=1, suffix=False) \
+            .replace(' years', '') \
+            .replace(' year', '') \
+            .replace(' ', '')
+
         em = disnake.Embed(title=f'`{member.display_name}`\'s birthday', color=utils.blurple)
+        em.add_field(
+            'Age',
+            age,
+            inline=False
+        )
         em.add_field(
             'Birthday date',
             entry.birthday_date.strftime('%d %B %Y'),
