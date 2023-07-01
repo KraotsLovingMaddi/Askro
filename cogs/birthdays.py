@@ -86,6 +86,8 @@ class Birthdays(commands.Cog):
     ):
         """See how much time left there is until the member's birthday, if they set it.
 
+        Parameters
+        ----------
         member: The member you wish to see the birthday of.
         """
 
@@ -133,6 +135,8 @@ class Birthdays(commands.Cog):
     ):
         """Set your birthday.
 
+        Parameters
+        ----------
         day: The day you were born in.
         month: The month you were born in.
         year: The year you were born in.
