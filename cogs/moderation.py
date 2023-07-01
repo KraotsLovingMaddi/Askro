@@ -422,6 +422,7 @@ class Moderation(commands.Cog):
         )
 
         await utils.try_dm(member, embed=em)
+        await member.ban(reason=f'{inter.author.display_name}: {reason}')
         await inter.send(
             f'> 👌 {member.mention} has been banned.'
         )
@@ -479,6 +480,7 @@ class Moderation(commands.Cog):
         )
 
         await utils.try_dm(member, embed=em)
+        await member.kick(reason=f'{inter.author.display_name}: {reason}')
         await inter.send(
             f'> 👌 {member.mention} has been kicked.'
         )
