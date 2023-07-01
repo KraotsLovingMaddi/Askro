@@ -202,9 +202,9 @@ class Birthdays(commands.Cog):
         await view.wait()
         if view.response is True:
             await self.bot.db.delete('bday', {'_id': inter.author.id})
-            await view.message.edit(content='Successfully removed your birthday.', view=view)
+            await inter.edit_original_message(content='Successfully removed your birthday.', view=view)
         else:
-            await view.message.edit(content='Did not remove your birthday.', view=view)
+            await inter.edit_original_message(content='Did not remove your birthday.', view=view)
 
     @birthday.sub_command(name='upcoming')
     async def bday_top(self, inter: disnake.AppCmdInter):
