@@ -128,9 +128,9 @@ class Birthdays(commands.Cog):
     async def birthday_set(
         self,
         inter: disnake.AppCmdInter,
-        day: int = commands.Param(ge=1, le=31, max_length=2),
-        month: int = commands.Param(ge=1, le=12, max_length=2),
-        year: int = commands.Param(min_length=4, max_length=4),
+        day: int = commands.Param(ge=1, le=31),
+        month: int = commands.Param(ge=1, le=12),
+        year: int = commands.Param(ge=2003),
         timezone: str = commands.Param(autocomplete=timezones_autocomp)
     ):
         """Set your birthday.
