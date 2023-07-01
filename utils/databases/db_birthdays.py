@@ -11,8 +11,9 @@ instance = Instance(birthdays_database)
 class Birthday(Document, GetDoc):
     id = IntField(attribute='_id', required=True)
 
-    xp = IntField(required=True)
-    messages_count = IntField(required=True)
+    timezone = StrField(required=True)
+    birthday_date = DateTimeField(required=True)
+    next_birthday = DateTimeField(required=True)
 
     class Meta:
         collection_name = 'Birthdays'
