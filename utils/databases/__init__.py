@@ -4,7 +4,8 @@ from .dbs import (
     marriages_database,
     misc_database,
     stories_database,
-    intros_database
+    intros_database,
+    birthdays_database
 )
 
 
@@ -26,6 +27,7 @@ from .db_marriages import Marriage
 from .db_misc import Misc
 from .db_stories import Story
 from .db_intros import Intros
+from .db_birthdays import Birthday
 
 __all__ = (
     'Level',
@@ -33,7 +35,8 @@ __all__ = (
     'Marriage',
     'Misc',
     'Story',
-    'Intros'
+    'Intros',
+    'Birthday'
 )
 
 from .objects import Database

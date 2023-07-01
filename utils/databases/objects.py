@@ -29,11 +29,16 @@ class Database:
             'story': Story,
 
             'intro': Intros,
-            'intros': Intros
+            'intros': Intros,
+
+            'birthday': Birthday,
+            'birthdays': Birthday,
+            'bday': Birthday,
+            'bdays': Birthday
         }
 
         self.all_collections = [
-            Level, Mute, Marriage, Misc, Story
+            Level, Mute, Marriage, Misc, Story, Birthday
         ]
 
     async def add_to_cache(

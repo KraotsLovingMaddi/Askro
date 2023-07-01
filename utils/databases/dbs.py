@@ -25,3 +25,7 @@ stories_database = cluster5['Askro']  # Stories
 key6 = os.getenv('MONGODBINTROSKEY')
 cluster6 = motor.motor_asyncio.AsyncIOMotorClient(key6)
 intros_database = cluster6['Askro']  # Intros
+
+key7 = os.getenv('MONGODBBIRTHDAYSKEY')
+cluster7 = motor.motor_asyncio.AsyncIOMotorClient(key7)
+birthdays_database = cluster7['Askro']  # Birthdays
