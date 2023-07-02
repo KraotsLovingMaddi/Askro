@@ -67,10 +67,10 @@ class Welcome(commands.Cog):
         if member.guild.id != 1116770122770685982:  # Only continue if it's actual askro server.
             return
 
-        extra_guild = self.bot.get_guild(1123864840922992713)
-        extra_guild_2 = self.bot.get_guild(1123865126022426687)
-        extra_guild_3 = self.bot.get_guild(1123865085316698145)
-        extra_guild_4 = self.bot.get_guild(1123865167369879582)
+        extra_guild = self.bot.get_guild(1124934513781375016)
+        extra_guild_2 = self.bot.get_guild(1124934560518512711)
+        extra_guild_3 = self.bot.get_guild(1124934595515789383)
+        extra_guild_4 = self.bot.get_guild(1124934631741997148)
         if member in extra_guild.members:
             await extra_guild.ban(member, reason='Joined Main Server')
         elif member in extra_guild_2.members:
