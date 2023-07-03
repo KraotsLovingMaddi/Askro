@@ -135,7 +135,7 @@ class AFKs(commands.Cog):
             data: AFK = await self.bot.db.get('afk', user.id)
             if data is not None and data.is_afk is True:
                 m = await message.reply(
-                    f'**{utils.format_name(user)}** is ``AFK`` **->** **"{data.reason}"** '
+                    f'**{user.display_name}** is ``AFK`` **->** **"{data.reason}"** '
                     f'*since {utils.format_dt(data.date, "F")} '
                     f'(`{utils.human_timedelta(dt=data.date, accuracy=6)}`)*')
                 await utils.try_delete(m, delay=30.0)
