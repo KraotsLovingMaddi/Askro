@@ -29,3 +29,7 @@ intros_database = cluster6['Askro']  # Intros
 key7 = os.getenv('MONGODBBIRTHDAYSKEY')
 cluster7 = motor.motor_asyncio.AsyncIOMotorClient(key7)
 birthdays_database = cluster7['Askro']  # Birthdays
+
+key8 = os.getenv('MONGODBAFKSKEY')
+cluster8 = motor.motor_asyncio.AsyncIOMotorClient(key8)
+afks_database = cluster8['Askro']  # AFKS

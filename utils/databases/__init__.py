@@ -5,7 +5,8 @@ from .dbs import (
     misc_database,
     stories_database,
     intros_database,
-    birthdays_database
+    birthdays_database,
+    afks_database
 )
 
 
@@ -28,6 +29,7 @@ from .db_misc import Misc
 from .db_stories import Story
 from .db_intros import Intros
 from .db_birthdays import Birthday
+from .db_afks import AFK
 
 __all__ = (
     'Level',
@@ -36,7 +38,8 @@ __all__ = (
     'Misc',
     'Story',
     'Intros',
-    'Birthday'
+    'Birthday',
+    'AFK'
 )
 
 from .objects import Database
