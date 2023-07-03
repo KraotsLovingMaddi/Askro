@@ -57,8 +57,12 @@ class AFKs(commands.Cog):
         await inter.send(f'You are now ``AFK`` **->** **"{reason}"**')
 
     @afk.sub_command_group(name='default')
-    async def afk_default(self, inter: disnake.AppCmdInter):
-        """See your default ``AFK`` reason, if you set any."""
+    async def afk_default(self, inter):
+        pass
+
+    @afk_default.sub_command(name='view')
+    async def afk_default_view(self, inter: disnake.AppCmdInter):
+        """View your default ``AFK`` reason, if you set any."""
 
         data: AFK = await self.bot.db.get('afk', inter.author.id)
         if data is None or data.default is None:
