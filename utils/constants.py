@@ -79,6 +79,9 @@ class Channels(NamedTuple):
     fanart = 1116854071538761788
     random_art = 1116854139683614910
 
+    no_mic_chat = 1125881200628740216
+    music_commands = 1125881173172826203
+
     staff_chat = 1116786173621309481
     bot_commands = 1117148228941525012
     ideas = 1117893777424666634

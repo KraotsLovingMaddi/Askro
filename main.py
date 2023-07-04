@@ -7,6 +7,8 @@ from datetime import datetime
 from collections import Counter
 from traceback import format_exception
 
+import mafic
+
 import disnake
 from disnake.ext import commands
 
@@ -44,6 +46,9 @@ class Askro(commands.Bot):
         self.loop.create_task(self.add_bad_words())
 
         self.webhooks = {}
+
+        self.pool = mafic.NodePool(self)
+        self.loop.create_task(self.add_nodes())
 
         self.load_extension('jishaku')
         os.environ['JISHAKU_NO_DM_TRACEBACK'] = '1'
@@ -209,6 +214,14 @@ class Askro(commands.Bot):
         if data and data.bad_words:
             for word, added_by in data.bad_words.items():
                 self.bad_words[word] = added_by
+
+    async def add_nodes(self):
+        await self.pool.create_node(
+            host='127.0.0.1',
+            port=2333,
+            label='MAIN',
+            password='youshallnotpass'
+        )
 
 
 Askro().run(TOKEN)
