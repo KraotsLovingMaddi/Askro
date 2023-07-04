@@ -166,7 +166,7 @@ class Music(commands.Cog):
         self.invoked_ids_check.start()
 
     async def cog_check(self, ctx: Context):
-        if ctx.author.id != self.bot._owner_id:
+        if ctx.author.id not in self.bot.owner_ids:
             if ctx.channel.id not in (
                 utils.Channels.music_commands, utils.Channels.no_mic_chat,
             ):
