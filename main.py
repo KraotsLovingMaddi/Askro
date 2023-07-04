@@ -60,8 +60,7 @@ class Askro(commands.Bot):
 
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
-                if 'music' not in filename:
-                    self.load_extension(f'cogs.{filename[:-3]}')
+                self.load_extension(f'cogs.{filename[:-3]}')
 
     async def on_ready(self):
         if not hasattr(self, 'uptime'):
