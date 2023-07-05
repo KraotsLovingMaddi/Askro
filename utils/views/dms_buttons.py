@@ -10,7 +10,7 @@ class DMSButtonRoles(disnake.ui.View):
         super().__init__(timeout=None)
 
     @disnake.ui.button(label='DMS: Open', custom_id='askro:dms_roles:DMSOpen', row=0, style=disnake.ButtonStyle.blurple)
-    async def DMS_Ask(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
+    async def DMS_Open(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in DMS_ROLES.values()]
         roles.append(interaction.guild.get_role(DMS_ROLES[button.label]))
         await interaction.author.edit(roles=roles, reason='DMS role update.')
