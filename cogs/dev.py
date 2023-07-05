@@ -14,6 +14,8 @@ from utils import Context, TextPage, clean_code, Misc
 
 from jishaku.shell import ShellReader
 
+from dulwich.repo import Repo
+
 from main import Askro
 
 
@@ -272,6 +274,10 @@ class Developer(commands.Cog):
         content = content[:-3]
         content += '\n[status] Git pull complete.\n```'
         em.description = content
+
+        r = Repo('.')
+        self.bot.git_hash = r.head().decode('utf-8')
+        r.close()
 
         await m.edit(embed=em)
 

@@ -9,6 +9,8 @@ from traceback import format_exception
 
 import mafic
 
+from dulwich.repo import Repo
+
 import disnake
 from disnake.ext import commands
 
@@ -33,6 +35,10 @@ class Askro(commands.Bot):
             max_messages=100000,
             owner_ids=[1116768380402270239, 1116770319802322954]
         )
+
+        r = Repo('.')
+        self.git_hash = r.head().decode('utf-8')
+        r.close()
 
         self._owner_id = 1116768380402270239
         self._owner_ids = [1116768380402270239, 1116770319802322954]
