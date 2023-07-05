@@ -50,6 +50,8 @@ class Askro(commands.Bot):
         self.pool = mafic.NodePool(self)
         self.loop.create_task(self.add_nodes())
 
+        self.added_views = False
+
         self.load_extension('jishaku')
         os.environ['JISHAKU_NO_DM_TRACEBACK'] = '1'
         os.environ['JISHAKU_FORCE_PAGINATOR'] = '1'
@@ -100,6 +102,19 @@ class Askro(commands.Bot):
             self.webhooks['mod_logs'] = mod_logs
             self.webhooks['message_logs'] = message_logs
             self.webhooks['welcome_webhook'] = welcome_webhook
+
+        if self.added_views is False:
+            self.add_view(utils.ColoursButtonRoles(), message_id=1126121651378077817)
+            self.add_view(utils.ColoursButtonRoles(), message_id=1126121652967714846)
+            self.add_view(utils.ColoursButtonRoles(), message_id=1126121654276337664)
+            self.add_view(utils.ColoursButtonRoles(), message_id=1126121655287160902)
+            self.add_view(utils.ColoursButtonRoles(), message_id=1126121656658710589)
+
+            self.add_view(utils.GenderButtonRoles(), message_id=1126121144248971343)
+            self.add_view(utils.PronounsButtonRoles(), message_id=1126121145318506528)
+            self.add_view(utils.SexualityButtonRoles(), message_id=1126121146723606639)
+            self.add_view(utils.AgeButtonRoles(), message_id=1126121148262912010)
+            self.add_view(utils.DMSButtonRoles(), message_id=1126121149340844123)
 
         if not hasattr(self, '_presence_changed'):
             activity = disnake.Activity(type=disnake.ActivityType.watching, name='you date')
