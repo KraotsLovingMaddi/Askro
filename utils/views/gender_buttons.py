@@ -30,7 +30,7 @@ class GenderButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Trans Male', custom_id='askro:gender_roles:TransMale', row=0, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Trans Male', custom_id='askro:gender_roles:TransMale', row=1, style=disnake.ButtonStyle.blurple)
     async def Trans_Male(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in GENDER_ROLES.values()]
         roles.append(interaction.guild.get_role(GENDER_ROLES[button.label]))
@@ -50,7 +50,7 @@ class GenderButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Non Binary', custom_id='askro:gender_roles:NonBinary', row=1, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Non Binary', custom_id='askro:gender_roles:NonBinary', row=2, style=disnake.ButtonStyle.blurple)
     async def Non_Binary(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in GENDER_ROLES.values()]
         roles.append(interaction.guild.get_role(GENDER_ROLES[button.label]))
@@ -60,7 +60,7 @@ class GenderButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Other Gender', custom_id='askro:gender_roles:OtherGender', row=1, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Other Gender', custom_id='askro:gender_roles:OtherGender', row=2, style=disnake.ButtonStyle.blurple)
     async def Other_Gender(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in GENDER_ROLES.values()]
         roles.append(interaction.guild.get_role(GENDER_ROLES[button.label]))

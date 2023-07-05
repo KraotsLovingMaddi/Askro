@@ -31,16 +31,6 @@ class PronounsButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='They/Them', custom_id='askro:pronouns_roles:TheyThem', row=0, style=disnake.ButtonStyle.blurple)
-    async def They_Them(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
-        roles = [role for role in interaction.author.roles if role.id not in PRONOUNS_ROLES.values()]
-        roles.append(interaction.guild.get_role(PRONOUNS_ROLES[button.label]))
-        await interaction.author.edit(roles=roles, reason='Pronouns role update.')
-        await interaction.response.send_message(
-            f'I have changed your pronouns role to `{button.label}`', 
-            phemeral=True
-        )
-
     @disnake.ui.button(label='He/They', custom_id='askro:pronouns_roles:HeThey', row=1, style=disnake.ButtonStyle.blurple)
     async def He_They(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in PRONOUNS_ROLES.values()]
@@ -53,6 +43,16 @@ class PronounsButtonRoles(disnake.ui.View):
 
     @disnake.ui.button(label='She/They', custom_id='askro:pronouns_roles:SheThey', row=1, style=disnake.ButtonStyle.blurple)
     async def She_They(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
+        roles = [role for role in interaction.author.roles if role.id not in PRONOUNS_ROLES.values()]
+        roles.append(interaction.guild.get_role(PRONOUNS_ROLES[button.label]))
+        await interaction.author.edit(roles=roles, reason='Pronouns role update.')
+        await interaction.response.send_message(
+            f'I have changed your pronouns role to `{button.label}`', 
+            phemeral=True
+        )
+
+    @disnake.ui.button(label='They/Them', custom_id='askro:pronouns_roles:TheyThem', row=2, style=disnake.ButtonStyle.blurple)
+    async def They_Them(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in PRONOUNS_ROLES.values()]
         roles.append(interaction.guild.get_role(PRONOUNS_ROLES[button.label]))
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
