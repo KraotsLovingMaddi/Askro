@@ -21,8 +21,8 @@ class PronounsButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='She/They', custom_id='askro:pronouns_roles:SheThey', row=0, style=disnake.ButtonStyle.blurple)
-    async def She_They(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
+    @disnake.ui.button(label='She/Her', custom_id='askro:pronouns_roles:SheHer', row=0, style=disnake.ButtonStyle.blurple)
+    async def She_Her(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in PRONOUNS_ROLES.values()]
         roles.append(interaction.guild.get_role(PRONOUNS_ROLES[button.label]))
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
