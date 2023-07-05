@@ -1,5 +1,6 @@
-
 import disnake
+
+__all__ = ('SexualityButtonRoles',)
 
 SEXUALITY_ROLES = {
     'Straight': 1123495958756474890, 'Bisexual': 1123495959872143400, 'Gay': 1123495960992030751,

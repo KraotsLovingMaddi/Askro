@@ -1,5 +1,7 @@
 import disnake
 
+__all__ = ('GenderButtonRoles',)
+
 GENDER_ROLES = {
     'Cis Male': 1123495932667895930, 'Cis Female': 1123495943711498280, 'Trans Female': 1123495945640886386,
     'Trans Male': 1123495946756575324, 'Non Binary': 1123495949176676452, 'Other Gender': 1123495951026372648

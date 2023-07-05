@@ -1,5 +1,6 @@
-
 import disnake
+
+__all__ = ('PronounsButtonRoles',)
 
 PRONOUNS_ROLES = {
     'He/Him': 1123495951793918095, 'She/Her': 1123495953249337374, 'They/Them': 1123495954335662213,

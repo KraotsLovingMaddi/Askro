@@ -2,6 +2,8 @@ import disnake
 
 from utils import Context
 
+__all__ = ('ColoursButtonRoles',)
+
 ALL_COLOURS = {
     'Romantic Red': 1122943489588613170, 'Orange': 1122943590293839944, 'Yummy Yellow': 1122943776655155230,
     'Gorgeous Green': 1122943868145508526, 'Bold Blue': 1122943930472878100, 'Princess Purple': 1122943995211956375,

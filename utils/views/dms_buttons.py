@@ -1,5 +1,7 @@
 import disnake
 
+__all__ = ('DMSButtonRoles',)
+
 DMS_ROLES = {
     'DMS: Open': 1123496491445665792, 'DMS: Ask': 1123496493446344716, 'DMS: Closed': 1123496495224721440
 }
