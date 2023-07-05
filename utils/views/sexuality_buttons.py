@@ -42,7 +42,7 @@ class SexualityButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Lesbian', custom_id='askro:sexuality_roles:Lesbian', row=0, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Lesbian', custom_id='askro:sexuality_roles:Lesbian', row=1, style=disnake.ButtonStyle.blurple)
     async def Lesbian(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in SEXUALITY_ROLES.values()]
         roles.append(interaction.guild.get_role(SEXUALITY_ROLES[button.label]))
@@ -52,7 +52,7 @@ class SexualityButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Pansexual', custom_id='askro:sexuality_roles:Pansexual', row=0, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Pansexual', custom_id='askro:sexuality_roles:Pansexual', row=1, style=disnake.ButtonStyle.blurple)
     async def Pansexual(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in SEXUALITY_ROLES.values()]
         roles.append(interaction.guild.get_role(SEXUALITY_ROLES[button.label]))
@@ -62,7 +62,7 @@ class SexualityButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Asexual', custom_id='askro:sexuality_roles:Asexual', row=0, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Asexual', custom_id='askro:sexuality_roles:Asexual', row=1, style=disnake.ButtonStyle.blurple)
     async def Asexual(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in SEXUALITY_ROLES.values()]
         roles.append(interaction.guild.get_role(SEXUALITY_ROLES[button.label]))
@@ -72,7 +72,7 @@ class SexualityButtonRoles(disnake.ui.View):
             phemeral=True
         )
 
-    @disnake.ui.button(label='Other Sexuality', custom_id='askro:sexuality_roles:OtherSexuality', row=0, style=disnake.ButtonStyle.blurple)
+    @disnake.ui.button(label='Other Sexuality', custom_id='askro:sexuality_roles:OtherSexuality', row=2, style=disnake.ButtonStyle.blurple)
     async def Other_Sexuality(self, button: disnake.ui.Button, interaction: disnake.MessageInteraction):
         roles = [role for role in interaction.author.roles if role.id not in SEXUALITY_ROLES.values()]
         roles.append(interaction.guild.get_role(SEXUALITY_ROLES[button.label]))
