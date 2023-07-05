@@ -16,7 +16,7 @@ class DMSButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='DMS role update.')
         await interaction.response.send_message(
             f'I have changed your DMS role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='DMS: Ask', custom_id='askro:dms_roles:DMSAsk', row=0, style=disnake.ButtonStyle.blurple)
@@ -26,7 +26,7 @@ class DMSButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='DMS role update.')
         await interaction.response.send_message(
             f'I have changed your DMS role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='DMS: Closed', custom_id='askro:dms_roles:DMSClosed', row=0, style=disnake.ButtonStyle.blurple)
@@ -36,5 +36,5 @@ class DMSButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='DMS role update.')
         await interaction.response.send_message(
             f'I have changed your DMS role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )

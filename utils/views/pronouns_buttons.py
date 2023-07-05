@@ -18,7 +18,7 @@ class PronounsButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
         await interaction.response.send_message(
             f'I have changed your pronouns role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='She/Her', custom_id='askro:pronouns_roles:SheHer', row=0, style=disnake.ButtonStyle.blurple)
@@ -28,7 +28,7 @@ class PronounsButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
         await interaction.response.send_message(
             f'I have changed your pronouns role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='He/They', custom_id='askro:pronouns_roles:HeThey', row=1, style=disnake.ButtonStyle.blurple)
@@ -38,7 +38,7 @@ class PronounsButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
         await interaction.response.send_message(
             f'I have changed your pronouns role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='She/They', custom_id='askro:pronouns_roles:SheThey', row=1, style=disnake.ButtonStyle.blurple)
@@ -48,7 +48,7 @@ class PronounsButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
         await interaction.response.send_message(
             f'I have changed your pronouns role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='They/Them', custom_id='askro:pronouns_roles:TheyThem', row=2, style=disnake.ButtonStyle.blurple)
@@ -58,5 +58,5 @@ class PronounsButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Pronouns role update.')
         await interaction.response.send_message(
             f'I have changed your pronouns role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )

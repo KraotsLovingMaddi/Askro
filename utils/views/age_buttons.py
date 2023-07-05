@@ -17,7 +17,7 @@ class AgeButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Age role update.')
         await interaction.response.send_message(
             f'I have changed your age role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='15', custom_id='askro:age_roles:15', row=0, style=disnake.ButtonStyle.blurple)
@@ -27,7 +27,7 @@ class AgeButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Age role update.')
         await interaction.response.send_message(
             f'I have changed your age role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='16', custom_id='askro:age_roles:16', row=0, style=disnake.ButtonStyle.blurple)
@@ -37,7 +37,7 @@ class AgeButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Age role update.')
         await interaction.response.send_message(
             f'I have changed your age role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='17', custom_id='askro:age_roles:17', row=1, style=disnake.ButtonStyle.blurple)
@@ -47,7 +47,7 @@ class AgeButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Age role update.')
         await interaction.response.send_message(
             f'I have changed your age role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='18', custom_id='askro:age_roles:18', row=1, style=disnake.ButtonStyle.blurple)
@@ -57,7 +57,7 @@ class AgeButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Age role update.')
         await interaction.response.send_message(
             f'I have changed your age role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='19', custom_id='askro:age_roles:19', row=1, style=disnake.ButtonStyle.blurple)
@@ -67,5 +67,5 @@ class AgeButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Age role update.')
         await interaction.response.send_message(
             f'I have changed your age role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )

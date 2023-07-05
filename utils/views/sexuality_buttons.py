@@ -19,7 +19,7 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Bisexual', custom_id='askro:sexuality_roles:Bisexual', row=0, style=disnake.ButtonStyle.blurple)
@@ -29,7 +29,7 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Gay', custom_id='askro:sexuality_roles:Gay', row=0, style=disnake.ButtonStyle.blurple)
@@ -39,7 +39,7 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Lesbian', custom_id='askro:sexuality_roles:Lesbian', row=1, style=disnake.ButtonStyle.blurple)
@@ -49,7 +49,7 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Pansexual', custom_id='askro:sexuality_roles:Pansexual', row=1, style=disnake.ButtonStyle.blurple)
@@ -59,7 +59,7 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Asexual', custom_id='askro:sexuality_roles:Asexual', row=1, style=disnake.ButtonStyle.blurple)
@@ -69,7 +69,7 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Other Sexuality', custom_id='askro:sexuality_roles:OtherSexuality', row=2, style=disnake.ButtonStyle.blurple)
@@ -79,5 +79,5 @@ class SexualityButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Sexuality role update.')
         await interaction.response.send_message(
             f'I have changed your sexuality role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )

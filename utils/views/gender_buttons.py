@@ -17,7 +17,7 @@ class GenderButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Gender role update.')
         await interaction.response.send_message(
             f'I have changed your gender role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Cis Female', custom_id='askro:gender_roles:Female', row=0, style=disnake.ButtonStyle.blurple)
@@ -27,7 +27,7 @@ class GenderButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Gender role update.')
         await interaction.response.send_message(
             f'I have changed your gender role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Trans Male', custom_id='askro:gender_roles:TransMale', row=1, style=disnake.ButtonStyle.blurple)
@@ -37,7 +37,7 @@ class GenderButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Gender role update.')
         await interaction.response.send_message(
             f'I have changed your gender role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Trans Female', custom_id='askro:gender_roles:TransFemale', row=1, style=disnake.ButtonStyle.blurple)
@@ -47,7 +47,7 @@ class GenderButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Gender role update.')
         await interaction.response.send_message(
             f'I have changed your gender role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Non Binary', custom_id='askro:gender_roles:NonBinary', row=2, style=disnake.ButtonStyle.blurple)
@@ -57,7 +57,7 @@ class GenderButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Gender role update.')
         await interaction.response.send_message(
             f'I have changed your gender role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
 
     @disnake.ui.button(label='Other Gender', custom_id='askro:gender_roles:OtherGender', row=2, style=disnake.ButtonStyle.blurple)
@@ -67,5 +67,5 @@ class GenderButtonRoles(disnake.ui.View):
         await interaction.author.edit(roles=roles, reason='Gender role update.')
         await interaction.response.send_message(
             f'I have changed your gender role to `{button.label}`', 
-            phemeral=True
+            ephemeral=True
         )
