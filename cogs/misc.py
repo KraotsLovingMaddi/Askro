@@ -252,9 +252,9 @@ class Misc(commands.Cog):
         threads = process.num_threads()
         pid = process.pid
 
-        commands = 0
+        prefix_commands = 0
         for _ in self.bot.walk_commands():
-            commands += 1
+            prefix_commands += 1
 
         slash_commands = 0
         for slash_command in self.bot.slash_commands:
@@ -286,7 +286,7 @@ class Misc(commands.Cog):
         em.add_field(
             name='Extras',
             value=f'Running on commit [``{self.bot.git_hash[:7]}``](https://github.com/KraotsLovingMaddi/Askro/tree/{self.bot.git_hash})'
-                  f'\nCommands: {commands}'
+                  f'\nCommands: {prefix_commands}'
                   f'\nSlash Commands: {slash_commands}'
                   f'\nExtensions: {extensions}'
                   f'\nUptime: {utils.human_timedelta(dt=self.bot.uptime, suffix=False)}',
