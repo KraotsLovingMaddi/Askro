@@ -511,7 +511,7 @@ class Moderation(commands.Cog):
         await inter.response.defer()
 
         messages = await inter.channel.purge(limit=amount)
-        await inter.send(f'> 👌 Purged `{len(messages):,}` messages.', delete_after=5.0)
+        await inter.channel.send(f'> 👌 Purged `{len(messages):,}` messages.', delete_after=5.0)
 
         await utils.log(
             self.bot.webhooks['mod_logs'],
