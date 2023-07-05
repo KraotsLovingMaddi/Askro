@@ -286,7 +286,7 @@ class Misc(commands.Cog):
         em.add_field(
             name='Extras',
             value=f'Running on commit [``{self.bot.git_hash[:7]}``](https://github.com/KraotsLovingMaddi/Askro/tree/{self.bot.git_hash})'
-                  f'\nCommands: {prefix_commands}'
+                  f'\nPrefix Commands: {prefix_commands}'
                   f'\nSlash Commands: {slash_commands}'
                   f'\nExtensions: {extensions}'
                   f'\nUptime: {utils.human_timedelta(dt=self.bot.uptime, suffix=False)}',
