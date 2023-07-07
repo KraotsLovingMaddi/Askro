@@ -206,6 +206,67 @@ class Misc(commands.Cog):
 
         await inter.send('https://discord.gg/gpntFHQQ82')
 
+    @commands.slash_command(name='nickname')
+    async def nickname(self, inter):
+        pass
+
+    @nickname.sub_command(name='set')
+    async def nickname_set(
+        self,
+        inter: disnake.AppCmdInter,
+        new_nickname: str = commands.Param(min_lenght=4, max_length=32)
+    ):
+        """Change your nickname.
+
+        Parameters
+        ----------
+        new_nickname: The new nickname you want to set for yourself.
+        """
+
+        if len(new_nickname) < 4:
+            return await inter.send(
+                f'{self.bot.denial} Nickname must be longer than 4 characters.',
+                ephemeral=True
+            )
+        elif len(new_nickname) > 32:
+            return await inter.send(
+                f'{self.bot.denial} Nickname must be not be over 32 characters.',
+                ephemeral=True
+            )
+        elif utils.check_string(new_nickname) or utils.check_profanity(new_nickname, bad_words=self.bot.bad_words.keys()):
+            return await inter.send(
+                f'{self.bot.denial} Cannot change your nickname because the nickname you chose '
+                'has too few pingable characters, is a bad word or is too short (minimum is **4**).',
+                ephemeral=True
+            )
+
+        await inter.author.edit(nick=new_nick)
+        await inter.send(f'Successfully changed your nickname to `{new_nickname}`')
+
+    @nickname.sub_command(name='remove')
+    async def nickname_remove(self, inter: disnake.AppCmdInter):
+        """Removes your nickname."""
+
+        if len(inter.author.global_name) < 4:
+            return await inter.send(
+                f'{self.bot.denial} Cannot remove your nickname because your name must be longer than 4 characters.',
+                ephemeral=True
+            )
+        elif len(inter.author.global_name) > 32:
+            return await inter.send(
+                f'{self.bot.denial} Cannot remove your nickname because your name must be not be over 32 characters.',
+                ephemeral=True
+            )
+        elif utils.check_string(inter.author.global_name) or utils.check_profanity(inter.author.global_name, bad_words=self.bot.bad_words.keys()):
+            return await inter.send(
+                f'{self.bot.denial} Cannot remove your nickname because your name '
+                'has too few pingable characters, is a bad word or is too short (minimum is **4**).',
+                ephemeral=True
+            )
+
+        await inter.author.edit(nick=None)
+        await inter.send('Successfully removed your nickname.')
+
     @commands.command()
     async def ping(self, ctx: Context):
         """See the bot's ping."""
