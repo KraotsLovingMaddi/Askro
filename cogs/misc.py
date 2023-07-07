@@ -240,7 +240,7 @@ class Misc(commands.Cog):
                 ephemeral=True
             )
 
-        await inter.author.edit(nick=new_nick)
+        await inter.author.edit(nick=new_nickname)
         await inter.send(f'Successfully changed your nickname to `{new_nickname}`')
 
     @nickname.sub_command(name='remove')
