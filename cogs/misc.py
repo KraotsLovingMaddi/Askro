@@ -214,7 +214,7 @@ class Misc(commands.Cog):
     async def nickname_set(
         self,
         inter: disnake.AppCmdInter,
-        new_nickname: str = commands.Param(min_lenght=4, max_length=32)
+        new_nickname: str = commands.Param(min_length=4, max_length=32)
     ):
         """Change your nickname.
 
