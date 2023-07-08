@@ -147,7 +147,7 @@ class Levels(commands.Cog):
         member: The member to set the new level to.
         """
 
-        if member.id not in self.bot.owner_ids:
+        if inter.author.id not in self.bot.owner_ids:
             return await inter.send(
                 f'{self.bot.denial} This command can only be used by owners!'
             )
