@@ -363,7 +363,11 @@ class Giveaways(commands.Cog):
         await inter.send(embed=(await view.prepare_embed()), view=view)
 
     @giveaway.sub_command(name='end')
-    async def giveaway_end(self, inter: disnake.AppCmdInter, giveaway_id: int):
+    async def giveaway_end(
+        self,
+        inter: disnake.AppCmdInter,
+        giveaway_id: int = commands.Param(large=True)
+    ):
         """End the giveaway earlier than the expiration date set.
         
         Parameters
