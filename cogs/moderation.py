@@ -32,10 +32,6 @@ class Moderation(commands.Cog):
                 return False
         return True
 
-    @property
-    def display_emoji(self) -> str:
-        return '🛠️'
-
     @commands.slash_command(name='mute')
     async def mute(
         self,

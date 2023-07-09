@@ -12,10 +12,6 @@ class Levels(commands.Cog):
     def __init__(self, bot: Askro):
         self.bot = bot
 
-    @property
-    def display_emoji(self) -> disnake.PartialEmoji:
-        return disnake.PartialEmoji(name='super_mario_green_shroom', id=938412194700341350)
-
     @commands.Cog.listener('on_message')
     async def update_data(self, message: disnake.Message):
         if not message.author.bot and message.guild:

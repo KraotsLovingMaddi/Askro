@@ -18,10 +18,6 @@ class Marriages(commands.Cog):
         self.currently_adopting: bool = False
         self.currently_unadopting: bool = False
 
-    @property
-    def display_emoji(self) -> str:
-        return '❤️'
-
     @commands.slash_command(name='marry')
     async def marry(self, inter: disnake.AppCmdInter, member: disnake.Member):
         """Marry the member if they want to and if you're/they're not taken by somebody else already.

@@ -23,10 +23,6 @@ class Birthdays(commands.Cog):
         self.bot = bot
         self.check_birthday.start()
 
-    @property
-    def display_emoji(self) -> str:
-        return '🍰'
-
     @tasks.loop(seconds=5.0)
     async def check_birthday(self):
         entries: list[Birthday] = await self.bot.db.find_sorted('bday', 'next_birthday', 1)

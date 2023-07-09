@@ -507,10 +507,6 @@ class Intro_(commands.Cog, name='Intros'):
             self.bot.add_view(Verify(self.bot), message_id=1127601531038994497)
             self.added_persistent_verify = True
 
-    @property
-    def display_emoji(self) -> str:
-        return '🙌'
-
     @commands.slash_command(name='intro', dm_permission=False)
     async def intro(self, inter):
         pass
