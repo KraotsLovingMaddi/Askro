@@ -480,9 +480,32 @@ class IntroEdit(Modal):
         )
 
 
+class Verify(disnake.ui.View):
+    def __init__(self, bot: Askro):
+        super().__init__(timeout=None)
+        self.bot = bot
+
+    @disnake.ui.button(label='Verify', custom_id='askro:intro:verify', style=disnake.ButtonStyle.green)
+    async def verify(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
+        if await self.bot.db.get('intros', inter.author.id) is not None:
+            return await inter.send(
+                f'{self.bot.denial} You are already verified.',
+                ephemeral=True
+            )
+
+        await inter.response.send_modal(IntroHalfOne(inter))
+
+
 class Intro_(commands.Cog, name='Intros'):
     def __init__(self, bot: Askro):
         self.bot = bot
+        self.added_persistent_verify = False
+
+    @commands.Cog.listener('on_ready')
+    async def add_persistent_verify(self):
+        if self.added_persistent_verify is False:
+            self.bot.add_view(Verify(self.bot), message_id=1127601531038994497)
+            self.added_persistent_verify = True
 
     @property
     def display_emoji(self) -> str:
