@@ -101,7 +101,7 @@ class GiveAwayCreationView(disnake.ui.View):
 
     async def prepare_embed(self):
         if self.expire_date is not None:
-            _duration = await utils.UserFriendlyTime().convert(self.expire_date)
+            _duration = (await utils.UserFriendlyTime().convert(self.expire_date)).dt
             duration = utils.human_timedelta(_duration, suffix=False, accuracy=4)
         else:
             duration = 'Not set.'
