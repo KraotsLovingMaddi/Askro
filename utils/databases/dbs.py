@@ -33,3 +33,7 @@ birthdays_database = cluster7['Askro']  # Birthdays
 key8 = os.getenv('MONGODBAFKSKEY')
 cluster8 = motor.motor_asyncio.AsyncIOMotorClient(key8)
 afks_database = cluster8['Askro']  # AFKS
+
+key9 = os.getenv('MONGODBGIVEAWAYSKEY')
+cluster9 = motor.motor_asyncio.AsyncIOMotorClient(key9)
+giveaways_database = cluster9['Askro']  # Giveaways
