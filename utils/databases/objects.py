@@ -37,11 +37,16 @@ class Database:
             'bdays': Birthday,
 
             'afk': AFK,
-            'afks': AFK
+            'afks': AFK,
+
+            'giveaway': Giveaway,
+            'giveaways': Giveaway,
+            'gw': Giveaway,
+            'gws': Giveaway
         }
 
         self.all_collections = [
-            Level, Mute, Marriage, Misc, Story, Birthday, AFK
+            Level, Mute, Marriage, Misc, Story, Birthday, AFK, Giveaway
         ]
 
     async def add_to_cache(
