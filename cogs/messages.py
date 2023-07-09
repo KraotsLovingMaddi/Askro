@@ -133,6 +133,27 @@ class Messages(commands.Cog):
             if message.author.id not in self.bot.owner_ids and message.content != '':
                 await utils.check_username(self.bot, message.author, bad_words=self.bot.bad_words.keys())
 
+    @commands.Cog.listener('on_message')
+    async def server_boosts(self, message: disnake.Message):
+        if message.channel.id == utils.Channels.boosts:
+            if message.is_system():
+                total_boosts = message.guild.premium_subscription_count
+                total_boosters = len(message.guild.premium_subscribers)
+                boost_level = message.guild.premium_tier
+                em = disnake.Embed(
+                    color=utils.booster_pink,
+                    title=f'Thanks for the boost `{message.author.display_name}`',
+                    description='Thanks for boosting the server! '
+                                f'We are now at level **{boost_level}** with a total '
+                                f'of **{total_boosts}** boosts and **{total_boosters}** '
+                                'total members that have boosted the server.'
+                )
+                em.set_thumbnail(url=message.author.display_avatar)
+
+                m = await message.channel.send(message.author.mention, embed=em)
+                await m.add_reaction('<a:nitro_boost:939677120454610964>')
+                await m.add_reaction('<:blob_love:1127608214050062387>')
+
 
 def setup(bot: Askro):
     bot.add_cog(Messages(bot))

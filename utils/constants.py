@@ -58,6 +58,7 @@ EMOJIS_TABLE = str.maketrans({v: k for k, v in LETTERS_EMOJI.items()})
 class Channels(NamedTuple):
     verify = 1121949315137544292
 
+    boosts = 1127607335230115952
     rules = 1116784327359991918
     news = 1116785847203790929
     welcome = 1121924923158450237
