@@ -100,8 +100,11 @@ class GiveAwayCreationView(disnake.ui.View):
                 child.disabled = False
 
     async def prepare_embed(self):
-        _duration = await utils.UserFriendlyTime().convert(self.expire_date)
-        duration = utils.human_timedelta(_duration, suffix=False, accuracy=4)
+        if self.expire_date is not None:
+            _duration = await utils.UserFriendlyTime().convert(self.expire_date)
+            duration = utils.human_timedelta(_duration, suffix=False, accuracy=4)
+        else:
+            duration = 'Not set.'
 
         em = disnake.Embed(title='Giveaway Creation', color=utils.blurple)
         em.add_field(name='Prize', value=self.prize, inline=False)
