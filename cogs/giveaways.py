@@ -248,7 +248,7 @@ class GiveAwayCreationView(disnake.ui.View):
             inline=False
         )
 
-        em.set_footer(text=f'Giveaway By: {inter.author.display_name}')
+        em.set_footer(text=f'Giveaway by: {inter.author.display_name}')
         if self.ping_everyone is False:
             allowed_mentions = disnake.AllowedMentions(everyone=False)
             content = None
