@@ -389,7 +389,7 @@ class Giveaways(commands.Cog):
                 ephemeral=True
             )
 
-        await self.end_giveaway()
+        await self.end_giveaway(giveaway)
 
     @commands.Cog.listener()
     async def on_ready(self):
