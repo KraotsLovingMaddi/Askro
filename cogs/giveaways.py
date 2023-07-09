@@ -270,7 +270,7 @@ class GiveAwayCreationView(disnake.ui.View):
         await self.bot.db.add('giveaways', utils.Giveaway(
             id=msg.id,
             prize=self.prize,
-            expire_date=self.expire_date,
+            expire_date=expiry_date,
             messages_requirement=self.message_req
         ))
 
