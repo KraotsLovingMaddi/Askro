@@ -620,11 +620,6 @@ class Intro_(commands.Cog, name='Intros'):
         )
         await inter.send(f'> {self.bot.agree} Successfully unverified {member.mention}')
 
-    @commands.Cog.listener('on_message')
-    async def verify_on_message(self, message: disnake.Message):
-        if message.channel.id == utils.Channels.verify and message.author.id != self.bot.user.id:
-            await message.delete()
-
     @commands.Cog.listener('on_member_remove')
     async def intro_cleanup(self, member: disnake.Member):
         if member.guild.id == 1116770122770685982:
