@@ -21,7 +21,7 @@ async def create_welcome_card(member: disnake.Member, join_pos: str) -> disnake.
 
     welcome = await utils.run_in_executor(Image.new)("RGBA", (750, 150), TRANSPARENT)
     draw = await utils.run_in_executor(ImageDraw.Draw)(welcome)
-    txt = f'Welcome {member.name}'
+    txt = f'Welcome {member.display_name}'
     font = await get_font(txt, welcome)
     await utils.run_in_executor(draw.text)((0, 0), txt, font=font)
     await utils.run_in_executor(img.paste)(welcome, (135, 300), welcome)
