@@ -314,7 +314,7 @@ class Giveaways(commands.Cog):
                     winner = 'No One.'
                     break
             else:
-                winner = f'{winner.mention} (`{winner.id}`)'
+                winner = f'{winner.mention} (`{winner.display_name}`)'
                 break
 
         channel = guild.get_channel(utils.Channels.news)
@@ -382,6 +382,8 @@ class Giveaways(commands.Cog):
                     ephemeral=True
             )
 
+        await inter.response.defer()
+
         giveaway: utils.Giveaway = await self.bot.db.get('giveaway', giveaway_id)
         if giveaway is None:
             return await inter.send(
@@ -390,6 +392,7 @@ class Giveaways(commands.Cog):
             )
 
         await self.end_giveaway(giveaway)
+        await inter.send('Giveaway ended.', ephemeral=True)
 
     @commands.Cog.listener()
     async def on_ready(self):
