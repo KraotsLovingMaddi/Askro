@@ -498,7 +498,7 @@ class Intro_(commands.Cog, name='Intros'):
     @commands.Cog.listener('on_ready')
     async def add_persistent_verify(self):
         if self.added_persistent_verify is False:
-            self.bot.add_view(Verify(self.bot), message_id=1127601531038994497)
+            self.bot.add_view(Verify(self.bot), message_id=1127816290191556608)
             self.added_persistent_verify = True
 
     @commands.slash_command(name='intro', dm_permission=False)
