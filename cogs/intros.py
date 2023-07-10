@@ -270,12 +270,6 @@ class ContinueIntro(disnake.ui.View):
     async def on_error(self, error, item, inter):
         await self.inter.bot.inter_reraise(inter, item, error)
 
-    async def on_timeout(self):
-        try:
-            return await self.inter.delete_original_response()
-        except disnake.HTTPException:
-            pass
-
     @disnake.ui.button(label='Continue', style=disnake.ButtonStyle.blurple)
     async def continue_intro(self, button: disnake.ui.Button, inter: disnake.Interaction):
         await inter.response.send_modal(IntroHalfTwo(self.intro, self.redoing))
