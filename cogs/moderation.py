@@ -418,7 +418,10 @@ class Moderation(commands.Cog):
         )
 
         await utils.try_dm(member, embed=em)
-        await member.ban(reason=f'{inter.author.display_name}: {reason}')
+        await member.ban(
+            clean_history_duration=0,
+            reason=f'{inter.author.display_name}: {reason}'
+        )
         await inter.send(
             f'> 👌 {member.mention} has been banned.'
         )
