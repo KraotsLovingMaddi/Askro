@@ -396,6 +396,44 @@ class Misc(commands.Cog):
         paginator = utils.EmbedPaginator(ctx, embeds)
         await paginator.start(ref=True)
 
+    @commands.slash_command(name='member-count')
+    async def member_count(self, inter: disnake.AppCmdInter):
+        """Shows how many members the server has, as well as how many are verified and how many are not."""
+
+        guild = self.bot.get_guild(1116770122770685982)
+        members = len([m for m in guild.members if not m.bot])
+        bots = len([b for b in guild.members if b.bot])
+        verified = len(await self.bot.db.find('intros'))
+        unverified = members - verified
+
+        verified_percentage = round(float(verified * 100 / members), 2)
+        unverified_percentage = round(float(unverified * 100 / members), 2)
+
+        em = disnake.Embed(title='Member Count', color=utils.blurple)
+        em.add_field(
+            name='Total Members',
+            value=f'{members:,}',
+            inline=False
+        )
+        em.add_field(
+            name='Total Bots',
+            value=f'{bots:,}',
+            inline=False
+        )
+        em.add_field(
+            name='Verified Members',
+            value=f'{verified:,} ({verified_percentage}%)',
+            inline=False
+        )
+        em.add_field(
+            name='Unverified Members',
+            value=f'{unverified:,} ({unverified_percentage}%)',
+            inline=False
+        )
+        em.set_footer(text=f'Requested by: {inter.author.display_name}')
+
+        await inter.send(embed=em)
+
 
 def setup(bot: Askro):
     bot.add_cog(Misc(bot))
