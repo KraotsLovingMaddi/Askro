@@ -127,6 +127,11 @@ class Askro(commands.Bot):
             await self.change_presence(status=disnake.Status.dnd, activity=activity)
             self._presence_changed = True
 
+        await self.collection_cleanup(utils.Intros)
+        await self.collection_cleanup(utils.Level)
+        await self.collection_cleanup(utils.AFK)
+        await self.collection_cleanup(utils.Birthday)
+
         print('Bot is online!')
 
     @property
@@ -242,6 +247,24 @@ class Askro(commands.Bot):
             label='MAIN',
             password='youshallnotpass'
         )
+
+    async def collection_cleanup(self, collection) -> None:
+        """Searches and deletes every single document that is related to a user that isn't in askro anymore.
+
+        Parameters
+        ----------
+            collection: :class:`.AsyncIOMotorCollection`
+                The collection object from which to delete.
+
+        Return
+        ------
+            `None`
+        """
+
+        guild = self.get_guild(1116770122770685982)
+        async for entry in collection.find():
+            if entry.id not in [m.id for m in guild.members]:
+                await entry.delete()
 
 
 Askro().run(TOKEN)
