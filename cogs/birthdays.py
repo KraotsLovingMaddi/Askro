@@ -226,6 +226,44 @@ class Birthdays(commands.Cog):
 
         await inter.send(embed=em)
 
+    @commands.slash_command(name='time')
+    async def user_time(
+        self,
+        inter: disnake.AppCmdInter,
+        member: disnake.Member = commands.Param(lambda inter: inter.author)
+    ):
+        """See what the time is for a user. They must have their birthday set for this to work.
+
+        Parameters
+        ----------
+        member: The member you want to see the time of.
+        """
+
+        entry: Birthday = await self.bot.db.get('birthday', member.id)
+        if entry is None:
+            if member.id == inter.author.id:
+                return await inter.send(
+                    f'{self.bot.denial} You must set your birthday if you want to see your current time.',
+                    ephemeral=True
+                )
+            else:
+                return await inter.send(
+                    f'{self.bot.denial} {member.mention} must set their birthday first.',
+                    ephemeral=True
+                )
+
+        tz = pytz.timezone(entry.timezone.replace(' ', '_'))
+        now = datetime.now()
+        offset = tz.utcoffset(now) + now
+        res = offset.strftime('%d %B %Y, %I:%M %p (%H:%M)')
+
+        em = disnake.Embed(title=f'`{member.display_name}`\'s time information', color=utils.blurple)
+        em.add_field('Current Time', res, inline=False)
+        em.add_field('Timezone', entry.timezone, inline=False)
+        em.set_footer(text=f'Requested by: {inter.author.display_name}')
+
+        await inter.send(embed=em)
+
     @commands.Cog.listener()
     async def on_member_remove(self, member: disnake.Member):
         if member.guild.id != 1116770122770685982:
