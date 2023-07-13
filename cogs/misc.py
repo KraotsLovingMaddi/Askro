@@ -396,7 +396,7 @@ class Misc(commands.Cog):
         paginator = utils.EmbedPaginator(ctx, embeds)
         await paginator.start(ref=True)
 
-    @commands.slash_command(name='member-count')
+    @commands.slash_command(name='membercount')
     async def member_count(self, inter: disnake.AppCmdInter):
         """Shows how many members the server has, as well as how many are verified and how many are not."""
 
@@ -433,6 +433,28 @@ class Misc(commands.Cog):
         em.set_footer(text=f'Requested by: {inter.author.display_name}')
 
         await inter.send(embed=em)
+
+    @commands.slash_command(name='celsiustofarenheit')
+    async def celsius_to_farenheit(self, inter: disnake.AppCmdInter, degrees: int):
+        """See how many degrees celsius is in farenheit.
+        
+        Parameters
+        ----------
+        degrees: The degrees amount you want to convert.
+        """
+
+        await inter.send(f'{degrees}⁰C = {int(degrees * 9 / 5 + 32)}⁰F')
+
+    @commands.slash_command(name='farenheittocelsius')
+    async def farenheit_to_celsius(self, inter: disnake.AppCmdInter, degrees: int):
+        """See how many degrees farenheit is in celsius.
+        
+        Parameters
+        ----------
+        degrees: The degrees amount you want to convert.
+        """
+
+        await inter.send(f'{degrees}⁰F = {int((degrees - 32) * 5 / 9)}⁰C')
 
 
 def setup(bot: Askro):
